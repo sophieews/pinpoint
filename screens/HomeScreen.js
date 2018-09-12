@@ -11,11 +11,34 @@ import {
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
+import * as firebase from "firebase";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBNPcD47E7dfNa4bGaGZmEsQcWfsSsOc50",
+    authDomain: "pin-point-app.firebaseapp.com",
+    databaseURL: "https://pin-point-app.firebaseio.com",
+    projectId: "pin-point-app",
+    storageBucket: "pin-point-app.appspot.com",
+    messagingSenderId: "451086133233"
+};
+
+firebase.initializeApp(firebaseConfig);
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
+
+  componentDidMount() {
+      this.storeLocation(-43.5322563,172.559524);
+  }
+
+    storeLocation(lat, long) {
+        firebase.database().ref('pins/').set({
+            lat: lat,
+            long: long
+        });
+    }
 
   render() {
     return (
