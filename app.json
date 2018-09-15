@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "pinpoint",
+    "name": "PinPoint",
     "description": "A very interesting project.",
     "slug": "pinpoint",
     "privacy": "public",
@@ -8,7 +8,7 @@
     "platforms": ["ios", "android"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/pin.png",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -22,10 +22,24 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.pinpoint"
+      "bundleIdentifier": "com.pinpoint.app"
     },
     "android": {
-      "package": "com.yourcompany.pinpoint"
+      "package": "com.pinpoint.app"
     }
   }
 }
+
+//"expo": {
+//"name": "Your App Name",
+//"icon": "./path/to/your/app-icon.png",
+//"version": "1.0.0",
+//"slug": "your-app-slug",
+//"sdkVersion": "XX.0.0",
+//"ios": {
+//"bundleIdentifier": "com.yourcompany.yourappname"
+//},
+//"android": {
+//"package": "com.yourcompany.yourappname"
+//}
+//}

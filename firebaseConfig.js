@@ -1,6 +1,4 @@
 
-import * as firebase from 'firebase';
-
 // Initialize Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyBNPcD47E7dfNa4bGaGZmEsQcWfsSsOc50",
@@ -10,5 +8,3 @@ const firebaseConfig = {
     storageBucket: "pin-point-app.appspot.com",
     messagingSenderId: "451086133233"
 };
-
-firebase.initializeApp(firebaseConfig);
