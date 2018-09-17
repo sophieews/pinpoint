@@ -17,6 +17,16 @@ export default class CameraScreen extends React.Component {
         this.setState({ hasCameraPermission: status === 'granted' });
     }
 
+    async takePicture()  {
+        if (this.camera) {
+            let photo = await this.camera.takePictureAsync({
+                base64: true
+            });
+            this.props.navigation.navigate("PhotoScreen", {image: photo})
+        }
+    };
+
+
     render() {
         const { hasCameraPermission } = this.state;
         if (hasCameraPermission === null) {
@@ -50,6 +60,24 @@ export default class CameraScreen extends React.Component {
                                     style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
                                     {' '}Flip{' '}
                                 </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'transparent',
+                                flexDirection: 'row',
+                            }}>
+                            <TouchableOpacity
+                                style={{
+                                    flex: 1,
+                                    alignSelf: 'flex-end',
+                                    alignItems: 'center',
+                                    backgroundColor: 'white'
+                                }}
+                                onPress={this.takePicture.bind(this)}
+                            >
+
                             </TouchableOpacity>
                         </View>
                     </Camera>
