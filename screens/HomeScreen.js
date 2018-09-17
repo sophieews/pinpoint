@@ -30,7 +30,7 @@ export default class HomeScreen extends React.Component {
   };
 
   componentDidMount() {
-      this.storeLocation(-43.5322563,172.559524);
+      // this.storeLocation(-43.5322563,172.559524);
   }
 
     storeLocation(lat, long) {

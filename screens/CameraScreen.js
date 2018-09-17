@@ -1,6 +1,8 @@
 import React from "react";
 import { Text, View, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { Camera, Permissions } from 'expo';
+import * as firebase from "firebase";
 
 export default class CameraScreen extends React.Component {
     static navigationOptions = {
@@ -15,6 +17,8 @@ export default class CameraScreen extends React.Component {
     async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({ hasCameraPermission: status === 'granted' });
+
+
     }
 
     async takePicture()  {
@@ -22,7 +26,12 @@ export default class CameraScreen extends React.Component {
             let photo = await this.camera.takePictureAsync({
                 base64: true
             });
-            this.props.navigation.navigate("PhotoScreen", {image: photo})
+            const storage = firebase.storage();
+            let storageRef = storage.ref();
+
+            storageRef.child('images/place.jpg').putString(photo.base64, 'base64').then(function(snapshot) {
+                console.log('Uploaded a base64 string!');
+            });
         }
     };
 
@@ -36,16 +45,14 @@ export default class CameraScreen extends React.Component {
         } else {
             return (
                 <View style={{ flex: 1 }}>
-                    <Camera style={{ flex: 1 }} type={this.state.type}>
+                    <Camera style={{ flex: 1 }} type={this.state.type} ref={ (cam) => {this.camera = cam}}>
                         <View
                             style={{
                                 flex: 1,
                                 backgroundColor: 'transparent',
-                                flexDirection: 'row',
                             }}>
                             <TouchableOpacity
                                 style={{
-                                    flex: 0.1,
                                     alignSelf: 'flex-end',
                                     alignItems: 'center',
                                 }}
@@ -56,27 +63,21 @@ export default class CameraScreen extends React.Component {
                                             : Camera.Constants.Type.back,
                                     });
                                 }}>
-                                <Text
-                                    style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-                                    {' '}Flip{' '}
-                                </Text>
+                                <Icon name='repeat' size={40} color='white'/>
                             </TouchableOpacity>
                         </View>
                         <View
                             style={{
-                                flex: 1,
                                 backgroundColor: 'transparent',
-                                flexDirection: 'row',
                             }}>
                             <TouchableOpacity
                                 style={{
-                                    flex: 1,
-                                    alignSelf: 'flex-end',
                                     alignItems: 'center',
-                                    backgroundColor: 'white'
+                                    backgroundColor: 'transparent'
                                 }}
                                 onPress={this.takePicture.bind(this)}
                             >
+                                <Icon name='camera' size={50} color='red'/>
 
                             </TouchableOpacity>
                         </View>
