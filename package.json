@@ -20,6 +20,7 @@
     "node.js": "0.0.0",
     "react": "16.3.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-29.0.0.tar.gz",
+    "react-native-maps": "^0.21.0",
     "react-navigation": "^2.9.3"
   },
   "devDependencies": {

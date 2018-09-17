@@ -9,11 +9,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { WebBrowser } from 'expo';
-
+import { WebBrowser, MapView } from 'expo';
 import { MonoText } from '../components/StyledText';
 import * as firebase from "firebase";
-import MapView from "../components/MapView"
+import { Marker } from 'react-native-maps';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBNPcD47E7dfNa4bGaGZmEsQcWfsSsOc50",
@@ -35,56 +34,33 @@ export default class HomeScreen extends React.Component {
         super(props);
 
         this.state = {
-            isLoading: true,
+            isLoading: false,
             pins: [],
         };
     }
 
   async componentDidMount() {
-      // this.storeLocation(-43.5322563,172.559524);
+      // this.createPin(-43.5322563,172.559524);
       const pins = await this.fetchPins();
       this.setState({pins: pins, isLoading: false});
   }
 
-    storeLocation(lat, long) {
+    createPin(lat, long) {
         firebase.database().ref('pins/').push().set({
-            lat: lat,
-            long: long
+            latitude: lat,
+            longitude: long,
+            title: "title",
+            description: "description"
         });
     }
-
-    // componentDidMount() {
-    //     const markers = this.fetchPins();
-    //     this.setState({markers: markers});
-    //     console.log(markers);
-    // }
-    //
 
     async fetchPins() {
         const eventref = firebase.database().ref('pins/');
         const snapshot = await eventref.once('value');
+        console.log(snapshot);
         const value = Object.values(snapshot.val());
         return value;
     }
-
-    renderPins() {
-        // sites I showed at the top of this issue come in fine from  props
-        const renderedPins = _.map(this.state.markers, site => {
-            const {title, description, coordinate, id} = site;
-
-            return (
-                <Marker
-                    key={id}
-                    title={title}
-                    description={description}
-                    coordinate={coordinate}
-                />
-            );
-        });
-
-        // if I inspect renderedSites, I see the Marker element, but it doesn't render
-        return renderedSites;
-    };
 
   render() {
       if(this.state.isLoading) {
@@ -95,13 +71,24 @@ export default class HomeScreen extends React.Component {
           )
       } else {
           return(
-              <MapView>
-                  {this.state.pins.map(pin => {
-                      {/*<MapView.Marker coordinate={{latitude: pin.lat, longitude: pin.long}}*/}
-                                      {/*// image={'../assets/images/pin.png')}*/}
-                      {/*>*/}
-                      {/*</MapView.Marker>*/}
-                  })}
+              <MapView
+                  style={{ flex: 1 }}
+                  initialRegion={{
+                      latitude: -43.5322563,
+                      longitude: 172.559524,
+                      latitudeDelta: 0.0922,
+                      longitudeDelta: 0.0421,
+                  }}
+              >
+                  {this.state.pins.map((pin, index) => (
+                      <Marker
+                          key={index}
+                          coordinate={{latitude: pin.latitude,
+                              longitude: pin.longitude}}
+                          title={"Pin"}
+                          description={"description"}
+                      />
+                  ))}
               </MapView>
           )
       }
