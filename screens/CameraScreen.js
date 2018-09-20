@@ -1,16 +1,16 @@
-import React from "react";
-import { Text, View, TouchableOpacity, Modal} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import React, { Component } from 'react';
+import {Text, Container, Header, Right, Content} from 'native-base';
+import { View, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { Camera, Permissions } from 'expo';
-import * as firebase from "firebase";
 import PhotoScreen from "./PhotoScreen";
+import Icon from "react-native-vector-icons/Entypo";
 
-export default class CameraScreen extends React.Component {
+export default class CameraTab extends Component {
     state = {
         hasCameraPermission: null,
-        type: Camera.Constants.Type.back,
-        image: {},
         modalVisible: false,
+        type: Camera.Constants.Type.back,
+        image: {}
     };
 
     async componentWillMount() {
@@ -30,62 +30,107 @@ export default class CameraScreen extends React.Component {
         }
     };
 
+    renderPhotoPreview = () => {
+        if(this.state.modalVisible) {
+            return <View style={{ flex: 1}} >
+                <Modal transparent={false} style={{flex: 1,}}>
+                    <Container>
+                        <Content>
+                        <TouchableOpacity
+                            style={{flex: 1,}}
+                            onPress={() => {this.setState({modalVisible: false})}}>
+                            <Icon name="back" style={styles.backIcon}/>
+                        </TouchableOpacity>
+                        <PhotoScreen image={this.state.image}/>
+                        </Content>
+                    </Container>
+                </Modal>
+            </View>
+        }
+    }
+
     render() {
         const { hasCameraPermission } = this.state;
         if (hasCameraPermission === null) {
             return <View />;
-        } else if (hasCameraPermission === false) {
-            return <Text>No access to camera</Text>;
-        } else {
+        } if (hasCameraPermission === false) {
             return (
-                <View style={{ flex: 1 }}>
-                    <Modal
-                        animationType="slider"
-                        transparent={false}
-                        visible={this.state.modalVisible}
-                        presentationStyle={"currentContext"}>
-                            <PhotoScreen image={this.state.image}/>
-                    </Modal>
-
-                    <Camera style={{ flex: 1 }} type={this.state.type} ref={ (cam) => {this.camera = cam}}>
-                        <View
+                <Text>
+                    No access to camera
+                </Text>
+            );
+        }
+        return (
+            <View style={{ flex: 1}}>
+                {this.renderPhotoPreview()}
+                <Camera
+                    style={{ flex: 1, height: '100%', width: '100%' }}
+                    type={this.state.type}
+                    ref={ (ref) => {this.camera = ref} }
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            backgroundColor: 'transparent',
+                        }}
+                    >
+                        <TouchableOpacity
                             style={{
                                 flex: 1,
-                                backgroundColor: 'transparent',
+                            }}
+                            onPress={() => {
+                                this.setState({
+                                    type: this.state.type === Camera.Constants.Type.back
+                                        ? Camera.Constants.Type.front
+                                        : Camera.Constants.Type.back,
+                                });
                             }}>
-                            <TouchableOpacity
-                                style={{
-                                    alignSelf: 'flex-end',
-                                    alignItems: 'center',
-                                }}
-                                onPress={() => {
-                                    this.setState({
-                                        type: this.state.type === Camera.Constants.Type.back
-                                            ? Camera.Constants.Type.front
-                                            : Camera.Constants.Type.back,
-                                    });
-                                }}>
-                                <Icon name='repeat' size={40} color='white'/>
-                            </TouchableOpacity>
-                        </View>
-                        <View
+                            <Icon name="cycle" style={styles.flipIcon}/>
+                        </TouchableOpacity>
+                    </View>
+                    <View
+                        style={{
+                            flex: 1,
+                            backgroundColor: 'transparent',
+                            flexDirection: 'row',
+                        }}>
+                        <TouchableOpacity
                             style={{
-                                backgroundColor: 'transparent',
-                            }}>
-                            <TouchableOpacity
-                                style={{
-                                    alignItems: 'center',
-                                    backgroundColor: 'transparent'
-                                }}
-                                onPress={this.takePicture.bind(this)}
-                            >
-                                <Icon name='camera' size={50} color='red'/>
+                                flex: 1,
+                                alignSelf: 'flex-end',
+                                alignItems: 'center',
+                            }}
+                            onPress={this.takePicture.bind(this)}
+                        >
+                            <Icon name="circle" style={{fontSize: 80, color: 'white', marginBottom: 10}}/>
 
-                            </TouchableOpacity>
-                        </View>
-                    </Camera>
-                </View>
-            )
-        }
+                        </TouchableOpacity>
+                    </View>
+                </Camera>
+            </View>
+
+        );
     }
 }
+
+
+const styles = StyleSheet.create({
+
+    flipIcon: {
+        fontSize: 40,
+        color: 'white',
+        marginLeft: 20,
+        marginTop: 15,
+    },
+    backIcon: {
+        fontSize: 40,
+        color: 'gray',
+        marginLeft: 20,
+        marginTop: 22,
+        marginBottom: 2,
+    },
+
+
+
+
+});

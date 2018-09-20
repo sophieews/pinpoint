@@ -1,30 +1,33 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import {Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
 import { Container, Input, Content, Text, Button,  } from 'native-base';
 import * as firebase from "firebase";
+import Icon from "react-native-vector-icons/Entypo";
 
 export default class PhotoScreen extends Component {
     state = {
-        caption: ""
+        imageName: "",
+        timePassed: false
     }
 
     submitPlace = () => {
         const options = {
-            image: this.props.image,
-            caption: this.state.caption,
+            image: this.props.image.base64,
+            imageName: this.state.imageName,
         }
+
         const storage = firebase.storage();
-        let storageRef = storage.ref(`images/${options.caption}.jpg` );
+        let storageRef = storage.ref(`images/image2.jpg`);
 
-        storageRef.putString(options.image.base64, 'base64')
-            .then(function() {
-            console.log('Uploaded a base64 string!');
-        });
+        setTimeout(() => {this.setState({timePassed: true})}, 3000);
 
-        // uploadPhoto(options)
-        //     .then((response) => {
-        //         console.log(response)
-        //     })
+        // debugger
+        storageRef.put(options.image);
+        debugger
+        storageRef.putString(options.image, 'base64', {contentType: 'image/jpg'})
+            .then(() => {
+                console.log('Image uploaded!');
+            });
     }
 
 
@@ -32,21 +35,19 @@ export default class PhotoScreen extends Component {
         return (
             <Container>
                 <Content>
-                    <Image
+
+                    <ImageBackground
                         source={{uri: this.props.image.uri}}
                         style={styles.image}
-                    />
+                    >
+                        <TouchableOpacity
+                            style={styles.saveButton}
+                            onPress={this.submitPlace}
+                        >
+                            <Icon name='chevron-with-circle-right' size={50} color='white'/>
+                        </TouchableOpacity>
 
-                    <Input placeholder="caption"
-                           multiline={true}
-                           style={styles.textInput}
-                           value={this.state.caption}
-                           onChangeText={(text) => this.setState({caption: text})}
-                    />
-
-                    <Button block onPress={this.submitPlace} style={styles.uploadButton}>
-                        <Text>Save Photo</Text>
-                    </Button>
+                    </ImageBackground>
 
                 </Content>
             </Container>
@@ -57,15 +58,16 @@ export default class PhotoScreen extends Component {
 const styles = StyleSheet.create({
     image: {
         flex:1,
-        height: 300,
-        resizeMode: 'contain',
-        marginTop:10,
-        marginBottom: 10,
-        borderRadius: 10
+        // width: '100%',
+        height: 550,
+        // resizeMode: 'contain',
+        // marginTop:60,
+        // marginBottom: 10,
+        // borderRadius: 10
     },
     textInput: {
         flex:1,
-        marginTop:20,
+        marginTop:10,
         marginBottom: 20,
         marginLeft: 20,
         marginRight: 20,
@@ -73,11 +75,16 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
 
-    uploadButton: {
-        borderRadius: 5,
-        marginLeft: 20,
+    saveButton: {
+        backgroundColor: 'transparent',
         marginRight: 20,
-        marginTop: 20,
         marginBottom: 15,
-    }
+        position: 'absolute',
+        bottom:0,
+        right:0,
+    },
+
+
+
+
 });
