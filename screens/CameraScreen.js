@@ -1,24 +1,21 @@
 import React from "react";
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Camera, Permissions } from 'expo';
 import * as firebase from "firebase";
+import PhotoScreen from "./PhotoScreen";
 
 export default class CameraScreen extends React.Component {
-    static navigationOptions = {
-        title: 'Camera',
-    };
-
     state = {
         hasCameraPermission: null,
         type: Camera.Constants.Type.back,
+        image: {},
+        modalVisible: false,
     };
 
     async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({ hasCameraPermission: status === 'granted' });
-
-
     }
 
     async takePicture()  {
@@ -26,15 +23,12 @@ export default class CameraScreen extends React.Component {
             let photo = await this.camera.takePictureAsync({
                 base64: true
             });
-            const storage = firebase.storage();
-            let storageRef = storage.ref();
 
-            storageRef.child('images/place.jpg').putString(photo.base64, 'base64').then(function(snapshot) {
-                console.log('Uploaded a base64 string!');
-            });
+            this.setState({
+                image: photo,
+                modalVisible: true})
         }
     };
-
 
     render() {
         const { hasCameraPermission } = this.state;
@@ -45,6 +39,14 @@ export default class CameraScreen extends React.Component {
         } else {
             return (
                 <View style={{ flex: 1 }}>
+                    <Modal
+                        animationType="slider"
+                        transparent={false}
+                        visible={this.state.modalVisible}
+                        presentationStyle={"currentContext"}>
+                            <PhotoScreen image={this.state.image}/>
+                    </Modal>
+
                     <Camera style={{ flex: 1 }} type={this.state.type} ref={ (cam) => {this.camera = cam}}>
                         <View
                             style={{
