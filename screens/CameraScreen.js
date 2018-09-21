@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import {Text, Container, Header, Right, Content} from 'native-base';
-import { View, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Modal, StyleSheet, Dimensions } from 'react-native';
 import { Camera, Permissions } from 'expo';
 import PhotoScreen from "./PhotoScreen";
 import Icon from "react-native-vector-icons/Entypo";
+const { width, height } = Dimensions.get('window');
 
 export default class CameraTab extends Component {
     state = {
@@ -24,7 +25,7 @@ export default class CameraTab extends Component {
                 base64: true
             });
 
-            this.setState({
+            await this.setState({
                 image: photo,
                 modalVisible: true})
         }
@@ -64,9 +65,10 @@ export default class CameraTab extends Component {
             <View style={{ flex: 1}}>
                 {this.renderPhotoPreview()}
                 <Camera
-                    style={{ flex: 1, height: '100%', width: '100%' }}
+                    style={{ flex: 1, height: height, width: width }}
                     type={this.state.type}
                     ref={ (ref) => {this.camera = ref} }
+                    // cameraFillMode={CameraFillMode.COVER}
                 >
                     <View
                         style={{

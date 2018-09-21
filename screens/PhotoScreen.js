@@ -3,31 +3,52 @@ import {Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-
 import { Container, Input, Content, Text, Button,  } from 'native-base';
 import * as firebase from "firebase";
 import Icon from "react-native-vector-icons/Entypo";
+import RNFetchBlob from "react-native-fetch-blob";
 
 export default class PhotoScreen extends Component {
     state = {
         imageName: "",
-        timePassed: false
+        timePassed: false,
     }
 
     submitPlace = () => {
         const options = {
-            image: this.props.image.base64,
             imageName: this.state.imageName,
+            image: this.props.image.uri,
         }
 
-        const storage = firebase.storage();
-        let storageRef = storage.ref(`images/image2.jpg`);
+        // const storage = firebase.storage();
+        // let storageRef = storage.ref(`images/image3.jpg`);
 
-        setTimeout(() => {this.setState({timePassed: true})}, 3000);
+        const Blob = RNFetchBlob.polyfill.Blob
+        const fs = RNFetchBlob.fs
+        window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+        window.Blob = Blob
 
-        // debugger
-        storageRef.put(options.image);
-        debugger
-        storageRef.putString(options.image, 'base64', {contentType: 'image/jpg'})
+        const imageRef = firebase.storage.ref(`images/Pink.jpg`)
+
+        let uploadBlob;
+
+        fs.readFile(options.image, 'base64')
+            .then((data) => {
+                return Blob.build(data, {type: `image/Pink.jpg;BASE64`})
+            })
+            .then((blob) => {
+                uploadBlob = blob
+                return imageRef.put(blob, {contentType: `image/Pink.jpg`})
+            })
             .then(() => {
-                console.log('Image uploaded!');
-            });
+                uploadBlob.close()
+                return imageRef.getDownloadURL()
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+        // storageRef.putString(options.image, 'base64', {contentType: 'image/jpg'})
+        //     .then(() => {
+        //         console.log('Image uploaded!');
+        //     });
     }
 
 
