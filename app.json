@@ -10,7 +10,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/pin.png",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/pinpoint-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -29,17 +29,3 @@
     }
   }
 }
-
-//"expo": {
-//"name": "Your App Name",
-//"icon": "./path/to/your/app-icon.png",
-//"version": "1.0.0",
-//"slug": "your-app-slug",
-//"sdkVersion": "XX.0.0",
-//"ios": {
-//"bundleIdentifier": "com.yourcompany.yourappname"
-//},
-//"android": {
-//"package": "com.yourcompany.yourappname"
-//}
-//}

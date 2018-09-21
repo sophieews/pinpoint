@@ -16,6 +16,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+console.disableYellowBox = true;
+
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
