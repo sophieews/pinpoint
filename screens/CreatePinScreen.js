@@ -1,32 +1,150 @@
 import React, { Component } from 'react';
-import {Image, ImageBackground, StyleSheet, } from 'react-native';
-import { Container, Input, Content, Text, Button,  } from 'native-base';
-import { FormLabel, FormInput, Header } from 'react-native-elements'
+import {Alert, Image, StyleSheet, View, Text, ActivityIndicator} from 'react-native';
+import { FormLabel, FormInput,   Button } from 'react-native-elements'
+import {Camera, ImagePicker, Location, Permissions} from "expo";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import * as firebase from "firebase";
 
 export default class CreatePinScreen extends Component {
+    static navigationOptions = () => ({
+        header: null,
+    });
+
     state = {
-        pinName: "",
+        pinTitle: "",
         pinDescription: "",
+        hasCameraPermission: null,
+        modalVisible: false,
+        type: Camera.Constants.Type.back,
+        image: null,
+        imageUri: null,
+        phoneLocation: "",
+        isLoading: false,
+    }
+
+    async componentWillMount() {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        this.setState({ hasCameraPermission: status === 'granted' });
+    }
+
+    chooseImage = async () => {
+        let result = await ImagePicker.launchCameraAsync();
+
+        if(!result.cancelled){
+            this.uploadImage(result.uri)
+                .then((blob) => {
+                    console.log(blob)
+                })
+                .catch((err) => {
+                    Alert.alert(err);
+                })
+        }
+    }
+
+    uploadImage = async (uri) => {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        await this.setState({
+            imageUri: uri,
+            image: blob,
+            imageName: blob._data.name,
+        })
+        return blob
+    };
+
+    emptyPin = async () => {
+        await this.setState({
+            pinTitle: "",
+            pinDescription: "",
+            image: null,
+            imageUri: null,
+            phoneLocation: "",
+        });
+    }
+
+    submitPin = async () => {
+        await this.setState({
+            isLoading: true
+        })
+
+        let ref = firebase.storage().ref("images/" + this.state.imageName);
+        await ref.put(this.state.image);
+
+        let location = await this.getLocationAsync();
+
+        await firebase.database().ref('pins/').push().set({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            title: this.state.pinTitle,
+            description: this.state.pinDescription,
+            photo: this.state.imageName,
+        })
+
+        await this.setState({
+            isLoading: false
+        })
+        this.emptyPin()
+    }
+
+    async getLocationAsync() {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            this.setState({
+                errorMessage: 'Please turn on location services for Pin Point',
+            });
+        }
+        return await Location.getCurrentPositionAsync({});
+    };
+
+    renderImage = () => {
+        if(this.state.imageUri !== null){
+            return <Image
+                source={{uri: this.state.imageUri}}
+                style={styles.image}
+            />
+        }
     }
 
     render() {
-        return (
-            <Container>
-                <Content>
-                    <Text style={styles.heading} >
-                        Create Pin
-                    </Text>
-                    <Image
-                        source={{uri: this.props.image.uri}}
-                        style={styles.image}
-                    />
-                    <FormLabel>Place Name</FormLabel>
-                    <FormInput onChangeText={(pinName) => this.setState({pinName})}/>
-                    <FormLabel>Description</FormLabel>
-                    <FormInput onChangeText={(pinDescription) => this.setState({pinDescription})}/>
-                </Content>
-            </Container>
-        );
+        const { hasCameraPermission } = this.state;
+        if (hasCameraPermission === null) {
+            return <View />;
+        } if (hasCameraPermission === false) {
+            return (
+                <Text>
+                    No access to camera
+                </Text>
+            );
+        }
+        if(this.state.isLoading) {
+            return(
+                <View style={styles.activityIndicatorContainer}>
+                    <Text style={{color: "gray", marginBottom: 20}} >Uploading Pin...</Text>
+                    <ActivityIndicator size="large" color="#484848" animating={true}/>
+                </View>
+            )
+        } else {
+            return(
+                <KeyboardAwareScrollView
+                    resetScrollToCoords={{ x: 0, y: 0 }}
+                    contentContainerStyle={styles.container}
+                    scrollEnabled={true}
+                >
+                    <View style={{ flex: 1}}>
+                        <Text style={styles.heading} >
+                            Create Pin
+                        </Text>
+                        {this.renderImage()}
+                        <Button title="Take Photo" style={styles.button} onPress={this.chooseImage}/>
+                        <FormLabel>Title</FormLabel>
+                        <FormInput value={this.state.pinTitle} onChangeText={(pinTitle) => this.setState({pinTitle})}/>
+                        <FormLabel>Description</FormLabel>
+                        <FormInput value={this.state.pinDescription} onChangeText={(pinDescription) => this.setState({pinDescription})}/>
+                        <Button title="Submit Pin" style={styles.button} onPress={this.submitPin}/>
+                    </View>
+                </KeyboardAwareScrollView>
+            )
+        }
     }
 }
 
@@ -35,7 +153,8 @@ const styles = StyleSheet.create({
         flex:1,
         height: 300,
         resizeMode: 'contain',
-        borderRadius: 10
+        borderRadius: 10,
+        marginTop: 10,
     },
     textInput: {
         flex:1,
@@ -50,20 +169,17 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 30,
         color: 'gray',
-        marginTop:10,
+        marginTop: 20,
 
     },
-
-    saveButton: {
-        backgroundColor: 'transparent',
-        marginRight: 20,
-        marginBottom: 15,
-        position: 'absolute',
-        bottom:0,
-        right:0,
+    button: {
+        marginTop: 10,
     },
-
-
-
+    activityIndicatorContainer: {
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1,
+    },
 
 });
