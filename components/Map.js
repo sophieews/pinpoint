@@ -128,8 +128,6 @@ export class Map extends React.Component {
     }
 }
 
-
-
 Map.propTypes = {
     pins: PropTypes.array,
     phoneLocation: PropTypes.shape({
