@@ -1,50 +1,29 @@
 import React, { Component } from 'react';
-import {Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Image, ImageBackground, StyleSheet, } from 'react-native';
 import { Container, Input, Content, Text, Button,  } from 'native-base';
-import * as firebase from "firebase";
-
-import Icon from "react-native-vector-icons/Entypo";
+import { FormLabel, FormInput, Header } from 'react-native-elements'
 
 export default class CreatePinScreen extends Component {
     state = {
-        imageName: "",
-        timePassed: false,
+        pinName: "",
+        pinDescription: "",
     }
-
-    submitPlace = () => {
-        const options = {
-            imageName: this.state.imageName,
-            image: this.props.image.uri,
-        }
-
-        const storage = firebase.storage();
-        let storageRef = storage.ref(`images/image3.jpg`);
-
-        storageRef.putString(options.image, 'base64', {contentType: 'image/jpg'})
-            .then(() => {
-                console.log('Image uploaded!');
-            });
-    }
-
 
     render() {
         return (
             <Container>
                 <Content>
-
-                    <ImageBackground
+                    <Text style={styles.heading} >
+                        Create Pin
+                    </Text>
+                    <Image
                         source={{uri: this.props.image.uri}}
                         style={styles.image}
-                    >
-                        <TouchableOpacity
-                            style={styles.saveButton}
-                            onPress={this.submitPlace}
-                        >
-                            <Icon name='chevron-with-circle-right' size={50} color='white'/>
-                        </TouchableOpacity>
-
-                    </ImageBackground>
-
+                    />
+                    <FormLabel>Place Name</FormLabel>
+                    <FormInput onChangeText={(pinName) => this.setState({pinName})}/>
+                    <FormLabel>Description</FormLabel>
+                    <FormInput onChangeText={(pinDescription) => this.setState({pinDescription})}/>
                 </Content>
             </Container>
         );
@@ -54,12 +33,9 @@ export default class CreatePinScreen extends Component {
 const styles = StyleSheet.create({
     image: {
         flex:1,
-        // width: '100%',
-        height: 550,
-        // resizeMode: 'contain',
-        // marginTop:60,
-        // marginBottom: 10,
-        // borderRadius: 10
+        height: 300,
+        resizeMode: 'contain',
+        borderRadius: 10
     },
     textInput: {
         flex:1,
@@ -69,6 +45,13 @@ const styles = StyleSheet.create({
         marginRight: 20,
         borderBottomColor: 'gray',
         borderBottomWidth: 1
+    },
+    heading: {
+        textAlign: "center",
+        fontSize: 30,
+        color: 'gray',
+        marginTop:10,
+
     },
 
     saveButton: {

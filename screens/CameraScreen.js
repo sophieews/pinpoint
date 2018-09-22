@@ -3,6 +3,7 @@ import {Text } from 'native-base';
 import { View, Alert } from 'react-native';
 import { Camera, Permissions, ImagePicker } from 'expo';
 import * as firebase from "firebase";
+import CreatePinScreen from "./CreatePinScreen";
 
 export default class CameraTab extends Component {
     state = {
@@ -24,11 +25,17 @@ export default class CameraTab extends Component {
         if(!result.cancelled){
             this.uploadImage(result.uri, "test-image2")
                 .then(() => {
-                    Alert.alert("Success");
+                    this.setState({
+                        modalVisible: true,
+                    })
                 })
                 .catch((err) => {
                     Alert.alert(err);
                 })
+        } else {
+            await this.setState({
+                modalVisible: true,
+            })
         }
     }
 
@@ -40,8 +47,15 @@ export default class CameraTab extends Component {
         await this.setState({
             image: blob
         })
-        return ref.put(this.state.image);
+        return blob
+        // return ref.put(blob);
     };
+
+    renderCreatePinForm = () => {
+        if(this.state.modalVisible){
+            return <CreatePinScreen image={this.state.image}/>
+        }
+    }
 
     render() {
         const { hasCameraPermission } = this.state;
@@ -56,6 +70,7 @@ export default class CameraTab extends Component {
         }
         return (
             <View style={{ flex: 1}}>
+                {this.renderCreatePinForm()}
             </View>
 
         );
