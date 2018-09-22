@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import {Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
 import { Container, Input, Content, Text, Button,  } from 'native-base';
 import * as firebase from "firebase";
-import Icon from "react-native-vector-icons/Entypo";
-import RNFetchBlob from "react-native-fetch-blob";
 
-export default class PhotoScreen extends Component {
+import Icon from "react-native-vector-icons/Entypo";
+
+export default class CreatePinScreen extends Component {
     state = {
         imageName: "",
         timePassed: false,
@@ -17,38 +17,13 @@ export default class PhotoScreen extends Component {
             image: this.props.image.uri,
         }
 
-        // const storage = firebase.storage();
-        // let storageRef = storage.ref(`images/image3.jpg`);
+        const storage = firebase.storage();
+        let storageRef = storage.ref(`images/image3.jpg`);
 
-        const Blob = RNFetchBlob.polyfill.Blob
-        const fs = RNFetchBlob.fs
-        window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-        window.Blob = Blob
-
-        const imageRef = firebase.storage.ref(`images/Pink.jpg`)
-
-        let uploadBlob;
-
-        fs.readFile(options.image, 'base64')
-            .then((data) => {
-                return Blob.build(data, {type: `image/Pink.jpg;BASE64`})
-            })
-            .then((blob) => {
-                uploadBlob = blob
-                return imageRef.put(blob, {contentType: `image/Pink.jpg`})
-            })
+        storageRef.putString(options.image, 'base64', {contentType: 'image/jpg'})
             .then(() => {
-                uploadBlob.close()
-                return imageRef.getDownloadURL()
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        // storageRef.putString(options.image, 'base64', {contentType: 'image/jpg'})
-        //     .then(() => {
-        //         console.log('Image uploaded!');
-        //     });
+                console.log('Image uploaded!');
+            });
     }
 
 
