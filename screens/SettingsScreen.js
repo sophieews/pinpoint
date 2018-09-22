@@ -15,35 +15,54 @@ import {
     Switch,
     Separator
 } from 'native-base';
+import { View} from "react-native";
+import * as AsyncStorage from "react-native";
 
 
 export default class SettingsScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Settings',
-  };
+    static navigationOptions = {
+        title: 'Settings',
+    };
 
-  state = {
-      radius: 5
-  }
+    state = {
+        radius: null,
+        modalVisible: false
+    };
 
-  render() {
-    return (
-        <Content style={{backgroundColor: "#fff"}}>
-            <ListItem icon>
-                <Left>
-                    <Button style={{ backgroundColor: "#ff6156" }}>
-                        <MaterialCommunityIcons active name="map-marker-radius" style={{color: "#fff"}} size={20}/>
-                    </Button>
-                </Left>
-                <Body>
-                    <Text>Pin Radius</Text>
-                </Body>
-                <Right>
-                    <Text>{this.state.radius} km</Text>
-                    <Icon active name="arrow-forward" />
-                </Right>
-            </ListItem>
-        </Content>
-    );
-  }
+    async componentDidMount() {
+        const radius = await this.get('radius');
+        this.setState({radius: radius});
+    }
+    async get(item) {
+        let storageItem;
+        try {
+            storageItem = await AsyncStorage.getItem(item) || null;
+        } catch (error) {
+            console.log(error.message);
+        }
+        return storageItem;
+    };
+
+    render() {
+        return (
+            <View>
+                <Content style={{backgroundColor: "#fff"}}>
+                    <ListItem icon>
+                        <Left>
+                            <Button style={{ backgroundColor: "#ff6156" }}>
+                                <MaterialCommunityIcons active name="map-marker-radius" style={{color: "#fff"}} size={20}/>
+                            </Button>
+                        </Left>
+                        <Body>
+                        <Text>Pin Radius</Text>
+                        </Body>
+                        <Right>
+                            {/*<Picker/>*/}
+                            <Icon active name="arrow-forward" />
+                        </Right>
+                    </ListItem>
+                </Content>
+            </View>
+        );
+    }
 }
