@@ -5,14 +5,16 @@ import PropTypes from 'prop-types';
 import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
 import {Col, Grid, Row} from "react-native-easy-grid";
-import {Container, Header, Right, Content} from "native-base";
+import {Container, Header, Right, Content, Button} from "native-base";
 import PinModalContent from "./PinModalContent";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export class Map extends React.Component {
 
     state = {
             modalVisible: false,
-            selectedPin: {}
+            selectedPin: {},
+            radiusActive: false
     };
 
     setModalVisible(visible) {
@@ -109,10 +111,24 @@ export class Map extends React.Component {
                     </MapView.Marker>
                 ))}
             </MapView>
+            <View style={{
+                position: 'absolute',
+                right: 10,
+                bottom: 75,
+                backgroundColor: 'transparent',
+            }}>
+                <Button style={{borderRadius: 40, backgroundColor: "#fff", height: 55, shadowColor: '#424242',
+                    shadowOffset: { width: 1, height: 1 },
+                    shadowOpacity: 0.5,}}>
+                    <Icon name="map-marker-radius" style={this.state.radiusActive ? mapStyles.activeRadiusButton : mapStyles.inactiveRadiusButton} size={35}/>
+                </Button>
+            </View>
             </Container>
         )
     }
 }
+
+
 
 Map.propTypes = {
     pins: PropTypes.array,

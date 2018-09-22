@@ -4,9 +4,11 @@ import {
     StyleSheet, Text,
     View,
 } from 'react-native';
+import { Button } from "native-base";
 import * as firebase from "firebase";
 import {Location, Permissions} from "expo";
 import { Map } from "../components/Map"
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default class HomeScreen extends React.Component {
 
@@ -85,7 +87,8 @@ export default class HomeScreen extends React.Component {
                 )
             } else {
                 return(
-                    <Map pins={this.state.pins} phoneLocation={this.state.phoneLocation}/>
+                            <Map pins={this.state.pins} phoneLocation={this.state.phoneLocation}/>
+
                 )
             }
         }
