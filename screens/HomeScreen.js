@@ -31,9 +31,10 @@ export default class HomeScreen extends React.Component {
         await this.getLocationAsync();
         console.log(this.state.phoneLocation);
         // this.createPin(37.795834, -122.406417);
-        const pins = await this.fetchPins();
-        this.setState({pins: pins, isLoading: false});
-        console.log(this.state.pins)
+        // const pins = await this.fetchPins();
+        // this.setState({pins: pins, isLoading: false});
+        await this.listenForPins();
+        console.log("Pins ", this.state.pins)
     }
 
     async getLocationAsync() {
@@ -58,10 +59,19 @@ export default class HomeScreen extends React.Component {
     }
 
     async fetchPins() {
-        const eventref = firebase.database().ref('pins/');
-        const snapshot = await eventref.once('value');
+        const pinsref = firebase.database().ref('pins/');
+        const snapshot = await pinsref.once('value');
         const value = Object.values(snapshot.val());
         return value;
+    }
+
+    async listenForPins() {
+        const pinsref = firebase.database().ref('pins/');
+        pinsref.on('value', (snapshot) => {
+            this.setState({
+                pins: snapshot.val()
+            })
+        });
     }
 
     render() {
