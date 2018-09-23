@@ -58,8 +58,6 @@ export class Map extends React.Component {
             <MapView
                 style={{flex: 1}}
                 initialRegion={{
-                    // latitude: -43.5322563,
-                    // longitude: 172.559524,
                     latitude: this.props.phoneLocation.coords.latitude,
                     longitude: this.props.phoneLocation.coords.longitude,
                     latitudeDelta: 0.0922,

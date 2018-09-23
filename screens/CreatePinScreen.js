@@ -58,7 +58,7 @@ export default class CreatePinScreen extends Component {
             pinDescription: "",
             image: null,
             imageUri: null,
-            phoneLocation: "",
+            userLocation: "",
         });
     }
 

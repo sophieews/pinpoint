@@ -21,7 +21,7 @@ export default class HomeScreen extends React.Component {
 
         this.state = {
             isLoading: true,
-            phoneLocation: "",
+            userLocation: "",
             pins: [],
             errorMessage: null
         };
@@ -29,7 +29,7 @@ export default class HomeScreen extends React.Component {
 
     async componentDidMount() {
         await this.getLocationAsync();
-        console.log(this.state.phoneLocation);
+        console.log(this.state.userLocation);
         // this.createPin(37.795834, -122.406417);
         const pins = await this.fetchPins();
         this.setState({pins: pins, isLoading: false});
@@ -45,7 +45,7 @@ export default class HomeScreen extends React.Component {
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        this.setState({ phoneLocation: location });
+        this.setState({ userLocation: location });
     };
 
     createPin(lat, long) {
@@ -68,8 +68,8 @@ export default class HomeScreen extends React.Component {
         let text = 'Waiting..';
         if (this.state.errorMessage) {
             text = this.state.errorMessage;
-        } else if (this.state.phoneLocation) {
-            text = JSON.stringify(this.state.phoneLocation);
+        } else if (this.state.userLocation) {
+            text = JSON.stringify(this.state.userLocation);
         }
 
         if(this.state.isLoading) {
@@ -87,8 +87,7 @@ export default class HomeScreen extends React.Component {
                 )
             } else {
                 return(
-                            <Map pins={this.state.pins} phoneLocation={this.state.phoneLocation}/>
-
+                    <Map pins={this.state.pins} phoneLocation={this.state.userLocation}/>
                 )
             }
         }
