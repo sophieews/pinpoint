@@ -87,7 +87,7 @@ export default class HomeScreen extends React.Component {
                 )
             } else {
                 return(
-                    <Map pins={this.state.pins} phoneLocation={this.state.userLocation}/>
+                    <Map pins={this.state.pins} userLocation={this.state.userLocation}/>
                 )
             }
         }

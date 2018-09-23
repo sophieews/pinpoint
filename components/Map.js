@@ -1,11 +1,11 @@
 import {MapView} from "expo";
 import React from "react";
-import {Modal, Image, Text, TouchableHighlight, View, Alert} from 'react-native';
+import {AsyncStorage, Image, Modal, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
 import {Col, Grid, Row} from "react-native-easy-grid";
-import {Container, Header, Right, Content, Button} from "native-base";
+import {Button, Container, Header, Right} from "native-base";
 import PinModalContent from "./PinModalContent";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -17,6 +17,7 @@ export class Map extends React.Component {
             radiusActive: false
     };
 
+
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
     }
@@ -25,9 +26,23 @@ export class Map extends React.Component {
         this.setState({selectedPin: pin});
     }
 
-    toggleRadiusActive(active) {
-        this.setState({radiusActive: active});
+    async toggleRadiusActive(active) {
+        this.setState({radiusActive: active})
     }
+
+    async getRadius() {
+        return await this.get("radius");
+    }
+
+    async get(item) {
+        let storageItem;
+        try {
+            storageItem = await AsyncStorage.getItem(item) || null;
+        } catch (error) {
+            console.log(error.message);
+        }
+        return storageItem;
+    };
 
     render() {
 
@@ -58,8 +73,8 @@ export class Map extends React.Component {
             <MapView
                 style={{flex: 1}}
                 initialRegion={{
-                    latitude: this.props.phoneLocation.coords.latitude,
-                    longitude: this.props.phoneLocation.coords.longitude,
+                    latitude: this.props.userLocation.coords.latitude,
+                    longitude: this.props.userLocation.coords.longitude,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}
@@ -112,6 +127,11 @@ export class Map extends React.Component {
                         </MapView.Callout>
                     </MapView.Marker>
                 ))}
+                <MapView.Circle
+                    center={{latitude: this.props.userLocation.coords.latitude, longitude: this.props.userLocation.coords.longitude}}
+                    radius={1000}
+                    fillColor="rgba(0, 0, 0, 0.2)"
+                    strokeColor="rgba(0, 0, 0, 0.2)"/>
             </MapView>
             <View style={{
                 position: 'absolute',
@@ -133,7 +153,7 @@ export class Map extends React.Component {
 
 Map.propTypes = {
     pins: PropTypes.array,
-    phoneLocation: PropTypes.shape({
+    userLocation: PropTypes.shape({
         coords: PropTypes.shape({
             latitude: PropTypes.number,
             longitude: PropTypes.number

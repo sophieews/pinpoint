@@ -10,7 +10,7 @@ import {
     Body,
     Right,
 } from 'native-base';
-import {View} from "react-native";
+import {View, StyleSheet} from "react-native";
 import { AsyncStorage, Picker, Modal } from "react-native"
 import Feather from "react-native-vector-icons/Feather"
 
@@ -33,6 +33,7 @@ export default class SettingsScreen extends React.Component {
         const radius = await this.get('radius');
         this.setState({radius: radius});
     }
+
     async get(item) {
         let storageItem;
         try {
@@ -102,7 +103,7 @@ export default class SettingsScreen extends React.Component {
                         <Text>Pin Radius</Text>
                         </Body>
                         <Right>
-                            <Text>{this.state.radius}</Text>
+                            <Text onPress={() => {this.setModalVisible(true)}}>{this.state.radius}</Text>
                             <Icon active name="arrow-forward" onPress={() => {this.setModalVisible(true)}}/>
                         </Right>
                     </ListItem>
