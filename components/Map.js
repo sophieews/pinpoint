@@ -8,12 +8,19 @@ import {Col, Grid, Row} from "react-native-easy-grid";
 import {Container, Header, Right, Content, Button} from "native-base";
 import PinModalContent from "./PinModalContent";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import * as firebase from "firebase";
+import {CalloutImage} from "./CalloutImage";
 
 export class Map extends React.Component {
+    static navigationOptions = {
+        title: 'Home',
+        header: null,
+    };
 
     state = {
             modalVisible: false,
             selectedPin: {},
+            selectedImage: "",
             radiusActive: false
     };
 
@@ -21,12 +28,26 @@ export class Map extends React.Component {
         this.setState({modalVisible: visible});
     }
 
-    setSelectedPin(pin) {
-        this.setState({selectedPin: pin});
+    async setSelectedPin(pin) {
+        await this.setState({selectedPin: pin});
+        // const url = await this.getSelectedImage(pin);
+        // this.setState({selectedImage: url});
+    }
+
+    async getSelectedImage(pin) {
+        let imageRef = firebase.storage().ref("images/" + pin.photo);
+        await imageRef.getDownloadURL()
+            .then((url) => {
+                return url
+            })
+            .catch((error) => {
+                console.log(error)
+                // Handle any errors
+            })
+
     }
 
     render() {
-
         return (
             <Container>
                 <Modal
@@ -97,13 +118,7 @@ export class Map extends React.Component {
                                         </Row>
                                     </Col>
                                     <Col size={1}>
-                                        <Image source={require("../assets/images/port-hills-web.jpg")}
-                                               // style={{ width: 50, height: 50, alignSelf:'center', backgroundColor: "grey", margin: 5, borderRadius: 20} }
-                                               style={{alignSelf: 'center',
-                                                   height: 50,
-                                                   width: 50,
-                                                   borderRadius: 25}}
-                                               resizeMode='cover' />
+                                        <CalloutImage pin={pin}/>
                                     </Col>
                                 </Grid>
                             </View>

@@ -52,8 +52,9 @@ export default class CameraTab extends Component {
     };
 
     renderCreatePinForm = () => {
+        const { navigate } = this.props.navigation;
         if(this.state.modalVisible){
-            return <CreatePinScreen image={this.state.image}/>
+            return <CreatePinScreen image={this.state.image} navigate={navigate}/>
         }
     }
 
