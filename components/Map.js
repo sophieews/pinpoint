@@ -7,15 +7,36 @@ import {customMap} from "./CustomMap";
 import {Col, Grid, Row} from "react-native-easy-grid";
 import {Button, Container, Header, Right} from "native-base";
 import PinModalContent from "./PinModalContent";
+import Circle from './Circle'
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
+const earthRadiusInKM = 6371;
+// you can customize these two values based on your needs
+const radiusInKM = 1;
+const aspectRatio = 1;
 
 export class Map extends React.Component {
 
     state = {
             modalVisible: false,
             selectedPin: {},
-            radiusActive: false
+            radiusActive: false,
+            region : {
+                latitude: 0,
+                longitude: 0,
+                latitudeDelta: 0,
+                longitudeDelta: 0
+            }
     };
+
+    componentWillMount() {
+        this.setState({ region: {
+            latitude: this.props.userLocation.coords.latitude,
+            longitude: this.props.userLocation.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,}
+        })
+    }
 
 
     setModalVisible(visible) {
@@ -27,7 +48,19 @@ export class Map extends React.Component {
     }
 
     async toggleRadiusActive(active) {
-        this.setState({radiusActive: active})
+        this.setState({radiusActive: active});
+        if(active) {
+            this.setState({
+                region: {
+                    latitude: this.props.userLocation.coords.latitude,
+                    longitude: this.props.userLocation.coords.longitude,
+                    latitudeDelta: 0.1022,
+                    longitudeDelta: 0.0621,
+                }
+            });
+            alert(this.state.region.latitudeDelta);
+            alert(this.state.region.longitudeDelta);
+        }
     }
 
     async getRadius() {
@@ -43,6 +76,30 @@ export class Map extends React.Component {
         }
         return storageItem;
     };
+
+    async setRegion() {
+        const radius = await this.getRadius();
+        const radiusInRad = radius / earthRadiusInKM;
+        const longitudeDelta = this.rad2deg(radiusInRad / Math.cos(this.deg2rad(this.props.userLocation.coords.latitude)));
+        const latitudeDelta = aspectRatio * this.rad2deg(radiusInRad);
+
+        this.setState({
+            region: {
+                latitude: this.props.userLocation.coords.latitude,
+                longitude: this.props.userLocation.coords.longitude,
+                latitudeDelta: latitudeDelta,
+                longitudeDelta: longitudeDelta
+            }
+        });
+    }
+
+    deg2rad (angle) {
+        return angle * 0.017453292519943295 // (angle / 180) * Math.PI;
+    }
+
+    rad2deg (angle) {
+        return angle * 57.29577951308232 // angle / Math.PI * 180
+    }
 
     render() {
 
@@ -72,12 +129,7 @@ export class Map extends React.Component {
 
             <MapView
                 style={{flex: 1}}
-                initialRegion={{
-                    latitude: this.props.userLocation.coords.latitude,
-                    longitude: this.props.userLocation.coords.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                }}
+                initialRegion={this.state.region}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
                 provider={"google"}
@@ -127,11 +179,9 @@ export class Map extends React.Component {
                         </MapView.Callout>
                     </MapView.Marker>
                 ))}
-                <MapView.Circle
-                    center={{latitude: this.props.userLocation.coords.latitude, longitude: this.props.userLocation.coords.longitude}}
-                    radius={1000}
-                    fillColor="rgba(0, 0, 0, 0.2)"
-                    strokeColor="rgba(0, 0, 0, 0.2)"/>
+                {this.state.radiusActive ?
+                    <Circle coords={this.props.userLocation.coords}/>
+                    : null}
             </MapView>
             <View style={{
                 position: 'absolute',

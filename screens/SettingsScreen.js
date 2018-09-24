@@ -81,11 +81,11 @@ export default class SettingsScreen extends React.Component {
                                             selectedValue={this.state.radius}
                                             style={{ height: 50, width: 100}}
                                             onValueChange={(itemValue, itemIndex) => this.setState({radius: itemValue})}>
-                                            <Picker.Item label="500 m" value="500" />
-                                            <Picker.Item label="1 km" value="1000" />
-                                            <Picker.Item label="2 km" value="2000" />
-                                            <Picker.Item label="5 km" value="5000" />
-                                            <Picker.Item label="10 km" value="10000" />
+                                            <Picker.Item label="500 m" value="0.5" />
+                                            <Picker.Item label="1 km" value="1" />
+                                            <Picker.Item label="2 km" value="2" />
+                                            <Picker.Item label="5 km" value="5" />
+                                            <Picker.Item label="10 km" value="10" />
                                         </Picker>
                                     </View>
                                 </Content>
@@ -103,7 +103,7 @@ export default class SettingsScreen extends React.Component {
                         <Text>Pin Radius</Text>
                         </Body>
                         <Right>
-                            <Text onPress={() => {this.setModalVisible(true)}}>{this.state.radius}</Text>
+                            <Text onPress={() => {this.setModalVisible(true)}}>{this.state.radius} km</Text>
                             <Icon active name="arrow-forward" onPress={() => {this.setModalVisible(true)}}/>
                         </Right>
                     </ListItem>
