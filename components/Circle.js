@@ -14,7 +14,9 @@ export default class Circle extends React.Component {
     }
 
     async componentDidMount() {
-        this.setState({radius: await this.getRadius() });
+        const radiusString = await this.getRadius();
+        const radiusMetres = Number(radiusString) * 1000;
+        this.setState({radius:  radiusMetres});
     }
 
     async getRadius() {

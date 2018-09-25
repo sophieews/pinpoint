@@ -50,16 +50,7 @@ export class Map extends React.Component {
     async toggleRadiusActive(active) {
         this.setState({radiusActive: active});
         if(active) {
-            this.setState({
-                region: {
-                    latitude: this.props.userLocation.coords.latitude,
-                    longitude: this.props.userLocation.coords.longitude,
-                    latitudeDelta: 0.1022,
-                    longitudeDelta: 0.0621,
-                }
-            });
-            alert(this.state.region.latitudeDelta);
-            alert(this.state.region.longitudeDelta);
+            await this.setRegion();
         }
     }
 
@@ -78,27 +69,28 @@ export class Map extends React.Component {
     };
 
     async setRegion() {
+        const lat = this.props.userLocation.coords.latitude;
+        const long = this.props.userLocation.coords.longitude;
         const radius = await this.getRadius();
-        const radiusInRad = radius / earthRadiusInKM;
-        const longitudeDelta = this.rad2deg(radiusInRad / Math.cos(this.deg2rad(this.props.userLocation.coords.latitude)));
-        const latitudeDelta = aspectRatio * this.rad2deg(radiusInRad);
+        // number of km per degree = ~111km (111.32 in google maps, but range varies between 110.567km at the equator and 111.699km at the poles)
+        // 1km in degree = 1 / 111.32km = 0.0089
+        // 1m in degree = 0.0089 / 1000 = 0.0000089
+        const coef = Number(radius) * 0.0089;
+        const newLat = lat + coef;
+        // pi / 180 = 0.018
+        const newLong = long + coef / Math.cos(lat * 0.018);
+
+        const latDelta = Math.abs(newLat - lat) * 2;
+        const longDelta = Math.abs(newLong - long) * 2;
 
         this.setState({
             region: {
                 latitude: this.props.userLocation.coords.latitude,
                 longitude: this.props.userLocation.coords.longitude,
-                latitudeDelta: latitudeDelta,
-                longitudeDelta: longitudeDelta
+                latitudeDelta: latDelta,
+                longitudeDelta: longDelta
             }
         });
-    }
-
-    deg2rad (angle) {
-        return angle * 0.017453292519943295 // (angle / 180) * Math.PI;
-    }
-
-    rad2deg (angle) {
-        return angle * 57.29577951308232 // angle / Math.PI * 180
     }
 
     render() {
@@ -129,7 +121,7 @@ export class Map extends React.Component {
 
             <MapView
                 style={{flex: 1}}
-                initialRegion={this.state.region}
+                region={this.state.region}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
                 provider={"google"}
