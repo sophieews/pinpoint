@@ -10,11 +10,6 @@ import PinModalContent from "./PinModalContent";
 import Circle from './Circle'
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const earthRadiusInKM = 6371;
-// you can customize these two values based on your needs
-const radiusInKM = 1;
-const aspectRatio = 1;
-
 export class Map extends React.Component {
 
     state = {

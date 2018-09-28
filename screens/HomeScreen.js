@@ -29,11 +29,8 @@ export default class HomeScreen extends React.Component {
 
     async componentDidMount() {
         await this.getLocationAsync();
-        console.log(this.state.userLocation);
-        // this.createPin(37.795834, -122.406417);
         const pins = await this.fetchPins();
         this.setState({pins: pins, isLoading: false});
-        console.log(this.state.pins)
     }
 
     async getLocationAsync() {
