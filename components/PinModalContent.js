@@ -1,5 +1,5 @@
 import {Container, Content} from "native-base";
-import {ScrollView, Text, StyleSheet, Image, ActivityIndicator} from "react-native";
+import {ScrollView, Text, StyleSheet, Image, ActivityIndicator, Button, View} from "react-native";
 import React from "react";
 import {Col, Grid, Row} from "react-native-easy-grid";
 import * as firebase from "firebase";
@@ -43,7 +43,8 @@ export default class PinModalContent extends React.Component {
                                     {this.state.image === "" ? <ActivityIndicator style={{
                                             alignItems: "center",
                                             justifyContent: "center",
-                                            flex: 1,}}/> :
+                                            flex: 1,
+                                        }}/> :
                                         <Image
                                             source={{uri: this.state.image}}
                                             style={styles.image}
@@ -71,7 +72,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignSelf: 'stretch',
         width: 100,
-        height: 200,
+        height: 400,
         paddingBottom: 20,
-    }
+    },
+
 });
