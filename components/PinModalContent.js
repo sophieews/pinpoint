@@ -1,5 +1,5 @@
 import {Container, Content} from "native-base";
-import {ScrollView, Text, StyleSheet, Image} from "react-native";
+import {ScrollView, Text, StyleSheet, Image, ActivityIndicator} from "react-native";
 import React from "react";
 import {Col, Grid, Row} from "react-native-easy-grid";
 import * as firebase from "firebase";
@@ -40,10 +40,15 @@ export default class PinModalContent extends React.Component {
                         <Grid>
                             <Col>
                                 <Row>
-                                    <Image
-                                        source={{uri: this.state.image}}
-                                        style={styles.image}
-                                    />
+                                    {this.state.image === "" ? <ActivityIndicator style={{
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            flex: 1,}}/> :
+                                        <Image
+                                            source={{uri: this.state.image}}
+                                            style={styles.image}
+                                        />
+                                    }
                                 </Row>
                                 <Row>
                                     <Text style={{fontSize: 30, fontWeight: "500", color:"#4D5656"}}>{this.props.pin.title}</Text>

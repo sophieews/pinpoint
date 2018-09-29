@@ -10,6 +10,7 @@ import PinModalContent from "./PinModalContent";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import * as firebase from "firebase";
 import {CalloutImage} from "./CalloutImage";
+import CalloutContents from "./Callout";
 
 export class Map extends React.Component {
     static navigationOptions = {
@@ -107,21 +108,7 @@ export class Map extends React.Component {
                                              this.setSelectedPin(pin);
                                          }}
                         >
-                            <View >
-                                <Grid>
-                                    <Col size={3}>
-                                        <Row>
-                                            <Text style={{fontSize: 20, fontWeight: "500", color:"#4D5656"}}>{pin.title}</Text>
-                                        </Row>
-                                        <Row>
-                                            <Text style={{fontSize: 15, color:"#283747"}}>{pin.description}</Text>
-                                        </Row>
-                                    </Col>
-                                    <Col size={1}>
-                                        <CalloutImage pin={pin}/>
-                                    </Col>
-                                </Grid>
-                            </View>
+                            <CalloutContents pin={pin}/>
                         </MapView.Callout>
                     </MapView.Marker>
                 ))}
