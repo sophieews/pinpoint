@@ -72,8 +72,9 @@ const styles = StyleSheet.create({
         flex: 1,
         alignSelf: 'stretch',
         width: 100,
-        height: 500,
+        height: 300,
         paddingBottom: 20,
+        resizeMode: 'contain'
     },
 
 });
