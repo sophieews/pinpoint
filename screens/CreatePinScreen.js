@@ -141,7 +141,7 @@ export default class CreatePinScreen extends Component {
                         <FormLabel>Description</FormLabel>
                         <FormInput value={this.state.pinDescription} onChangeText={(pinDescription) => this.setState({pinDescription})}/>
                         <Button title="Submit Pin" style={styles.button} onPress={() => {
-                            this.submitPin;
+                            this.submitPin();
                             this.props.navigate('Home')
                         }}/>
                     </View>

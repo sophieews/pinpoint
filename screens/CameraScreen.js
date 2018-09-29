@@ -8,7 +8,7 @@ import CreatePinScreen from "./CreatePinScreen";
 export default class CameraTab extends Component {
     state = {
         hasCameraPermission: null,
-        modalVisible: false,
+        modalVisible: true,
         type: Camera.Constants.Type.back,
         image: {}
     };
@@ -16,40 +16,40 @@ export default class CameraTab extends Component {
     async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({ hasCameraPermission: status === 'granted' });
-        this.chooseImage()
+        // this.chooseImage()
     }
-
-    chooseImage = async () => {
-        let result = await ImagePicker.launchCameraAsync();
-
-        if(!result.cancelled){
-            this.uploadImage(result.uri, "test-image2")
-                .then(() => {
-                    this.setState({
-                        modalVisible: true,
-                    })
-                })
-                .catch((err) => {
-                    Alert.alert(err);
-                })
-        } else {
-            await this.setState({
-                modalVisible: true,
-            })
-        }
-    }
-
-    uploadImage = async (uri, imageName) => {
-        const response = await fetch(uri);
-        const blob = await response.blob();
-
-        let ref = firebase.storage().ref().child("images/" + imageName);
-        await this.setState({
-            image: blob
-        })
-        return blob
-        // return ref.put(blob);
-    };
+    //
+    // chooseImage = async () => {
+    //     let result = await ImagePicker.launchCameraAsync();
+    //
+    //     if(!result.cancelled){
+    //         this.uploadImage(result.uri, "test-image2")
+    //             .then(() => {
+    //                 this.setState({
+    //                     modalVisible: true,
+    //                 })
+    //             })
+    //             .catch((err) => {
+    //                 Alert.alert(err);
+    //             })
+    //     } else {
+    //         await this.setState({
+    //             modalVisible: true,
+    //         })
+    //     }
+    // }
+    //
+    // uploadImage = async (uri, imageName) => {
+    //     const response = await fetch(uri);
+    //     const blob = await response.blob();
+    //
+    //     let ref = firebase.storage().ref().child("images/" + imageName);
+    //     await this.setState({
+    //         image: blob
+    //     })
+    //     return blob
+    //     // return ref.put(blob);
+    // };
 
     renderCreatePinForm = () => {
         const { navigate } = this.props.navigation;
