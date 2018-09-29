@@ -9,12 +9,20 @@ import {Button, Container, Header, Right} from "native-base";
 import PinModalContent from "./PinModalContent";
 import Circle from './Circle'
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import * as firebase from "firebase";
+import {CalloutImage} from "./CalloutImage";
+import CalloutContents from "./Callout";
 
 export class Map extends React.Component {
+    static navigationOptions = {
+        title: 'Home',
+        header: null,
+    };
 
     state = {
             modalVisible: false,
             selectedPin: {},
+            selectedImage: "",
             radiusActive: false,
             region : {
                 latitude: 0,
@@ -38,8 +46,23 @@ export class Map extends React.Component {
         this.setState({modalVisible: visible});
     }
 
-    setSelectedPin(pin) {
-        this.setState({selectedPin: pin});
+    async setSelectedPin(pin) {
+        await this.setState({selectedPin: pin});
+        // const url = await this.getSelectedImage(pin);
+        // this.setState({selectedImage: url});
+    }
+
+    async getSelectedImage(pin) {
+        let imageRef = firebase.storage().ref("images/" + pin.photo);
+        await imageRef.getDownloadURL()
+            .then((url) => {
+                return url
+            })
+            .catch((error) => {
+                console.log(error)
+                // Handle any errors
+            })
+
     }
 
     async toggleRadiusActive(active) {
@@ -89,7 +112,6 @@ export class Map extends React.Component {
     }
 
     render() {
-
         return (
             <Container>
                 <Modal
@@ -142,27 +164,7 @@ export class Map extends React.Component {
                                              this.setSelectedPin(pin);
                                          }}
                         >
-                            <View >
-                                <Grid>
-                                    <Col size={3}>
-                                        <Row>
-                                            <Text style={{fontSize: 20, fontWeight: "500", color:"#4D5656"}}>{pin.title}</Text>
-                                        </Row>
-                                        <Row>
-                                            <Text style={{fontSize: 15, color:"#283747"}}>{pin.description}</Text>
-                                        </Row>
-                                    </Col>
-                                    <Col size={1}>
-                                        <Image source={require("../assets/images/port-hills-web.jpg")}
-                                               // style={{ width: 50, height: 50, alignSelf:'center', backgroundColor: "grey", margin: 5, borderRadius: 20} }
-                                               style={{alignSelf: 'center',
-                                                   height: 50,
-                                                   width: 50,
-                                                   borderRadius: 25}}
-                                               resizeMode='cover' />
-                                    </Col>
-                                </Grid>
-                            </View>
+                            <CalloutContents pin={pin}/>
                         </MapView.Callout>
                     </MapView.Marker>
                 ))}

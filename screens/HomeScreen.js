@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 export default class HomeScreen extends React.Component {
 
     static navigationOptions = {
+        title: 'Home',
         header: null,
     };
 

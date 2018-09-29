@@ -6,9 +6,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import * as firebase from "firebase";
 
 export default class CreatePinScreen extends Component {
-    static navigationOptions = () => ({
+    static navigationOptions = {
         header: null,
-    });
+    };
 
     state = {
         pinTitle: "",
@@ -140,7 +140,10 @@ export default class CreatePinScreen extends Component {
                         <FormInput value={this.state.pinTitle} onChangeText={(pinTitle) => this.setState({pinTitle})}/>
                         <FormLabel>Description</FormLabel>
                         <FormInput value={this.state.pinDescription} onChangeText={(pinDescription) => this.setState({pinDescription})}/>
-                        <Button title="Submit Pin" style={styles.button} onPress={this.submitPin}/>
+                        <Button title="Submit Pin" style={styles.button} onPress={() => {
+                            this.submitPin;
+                            this.props.navigate('Home')
+                        }}/>
                     </View>
                 </KeyboardAwareScrollView>
             )
