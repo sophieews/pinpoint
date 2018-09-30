@@ -29,11 +29,11 @@ export default class HomeScreen extends React.Component {
 
     async componentDidMount() {
         await this.getLocationAsync();
-        console.log(this.state.phoneLocation);
         // this.createPin(37.795834, -122.406417);
         // const pins = await this.fetchPins();
         // this.setState({pins: pins, isLoading: false});
         await this.listenForPins();
+        this.setState({isLoading: false});
         console.log("Pins ", this.state.pins)
     }
 
@@ -68,8 +68,17 @@ export default class HomeScreen extends React.Component {
     async listenForPins() {
         const pinsref = firebase.database().ref('pins/');
         pinsref.on('value', (snapshot) => {
+            const pins = [];
+            const obj = snapshot.val();
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    pins.push(obj[key]);
+                }
+
+            }
+            console.log(pins);
             this.setState({
-                pins: snapshot.val()
+                pins: pins
             })
         });
     }
