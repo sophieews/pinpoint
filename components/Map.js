@@ -178,12 +178,12 @@ export class Map extends React.Component {
                 bottom: 75,
                 backgroundColor: 'transparent',
             }}>
-                <Button style={{borderRadius: 40, backgroundColor: "#fff", height: 55, shadowColor: '#424242',
-                    shadowOffset: { width: 1, height: 1 },
-                    shadowOpacity: 0.5,}}
-                    onPress={() =>this.toggleRadiusActive(!this.state.radiusActive)}>
-                    <Icon name="map-marker-radius" style={this.state.radiusActive ? mapStyles.activeRadiusButton : mapStyles.inactiveRadiusButton} size={35}/>
-                </Button>
+                {/*<Button style={{borderRadius: 40, backgroundColor: "#fff", height: 55, shadowColor: '#424242',*/}
+                    {/*shadowOffset: { width: 1, height: 1 },*/}
+                    {/*shadowOpacity: 0.5,}}*/}
+                    {/*onPress={() =>this.toggleRadiusActive(!this.state.radiusActive)}>*/}
+                    {/*<Icon name="map-marker-radius" style={this.state.radiusActive ? mapStyles.activeRadiusButton : mapStyles.inactiveRadiusButton} size={35}/>*/}
+                {/*</Button>*/}
             </View>
             </Container>
         )
