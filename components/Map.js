@@ -1,6 +1,7 @@
-import {MapView} from "expo";
 import React from "react";
 import {AsyncStorage, Image, Modal, Text, View} from 'react-native';
+import MapView from "react-native-map-clustering";
+import {Callout, Marker} from "react-native-maps";
 import PropTypes from 'prop-types';
 import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
@@ -145,7 +146,7 @@ export class Map extends React.Component {
                 customMapStyle={customMap}
             >
                 {this.props.pins.map((pin, index) => (
-                    <MapView.Marker
+                    <Marker
                         key={index}
                         coordinate={{
                             latitude: pin.latitude,
@@ -158,19 +159,16 @@ export class Map extends React.Component {
                             source={require("../assets/images/pin.png")}
                             style={{height: 35, width: 30}}
                         />
-                        <MapView.Callout style={{flex: -1, position: 'absolute', minWidth:150, minHeight: 60}}
+                        <Callout style={{flex: -1, position: 'absolute', minWidth:150, minHeight: 60}}
                                          onPress={() => {
                                              this.setModalVisible(true);
                                              this.setSelectedPin(pin);
                                          }}
                         >
                             <CalloutContents pin={pin}/>
-                        </MapView.Callout>
-                    </MapView.Marker>
+                        </Callout>
+                    </Marker>
                 ))}
-                {this.state.radiusActive ?
-                    <Circle coords={this.props.userLocation.coords}/>
-                    : null}
             </MapView>
             <View style={{
                 position: 'absolute',
@@ -181,7 +179,7 @@ export class Map extends React.Component {
                 {/*<Button style={{borderRadius: 40, backgroundColor: "#fff", height: 55, shadowColor: '#424242',*/}
                     {/*shadowOffset: { width: 1, height: 1 },*/}
                     {/*shadowOpacity: 0.5,}}*/}
-                    {/*onPress={() =>this.toggleRadiusActive(!this.state.radiusActive)}>*/}
+                                 {/*onPress={() =>this.toggleRadiusActive(!this.state.radiusActive)}>*/}
                     {/*<Icon name="map-marker-radius" style={this.state.radiusActive ? mapStyles.activeRadiusButton : mapStyles.inactiveRadiusButton} size={35}/>*/}
                 {/*</Button>*/}
             </View>
