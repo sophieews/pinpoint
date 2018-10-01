@@ -229,7 +229,6 @@ export class Map extends React.Component {
 const styles = StyleSheet.create({
 
     button: {
-        textAlign: 'center',
         paddingLeft: 8,
         width: 100,
         flex: 1,
