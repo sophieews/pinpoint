@@ -1,6 +1,6 @@
 import {MapView} from "expo";
 import React from "react";
-import {AsyncStorage, Image, Modal, Text, View, Platform} from 'react-native';
+import {AsyncStorage, Image, Modal, Text, View, Platform, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
@@ -127,12 +127,13 @@ export class Map extends React.Component {
                         </Header>
                         <PinModalContent pin={this.state.selectedPin} />
                         <Footer>
-                            <FooterTab>
-                                <Button onPress={() => {
+                            <FooterTab >
+                                <Button style={styles.button} onPress={() => {
                                     this.setDirections(true);
                                     this.setModalVisible(!this.state.modalVisible);
                                 }}>
                                     <Icon size={35} name='directions' color="gray"/>
+                                   <Text style={{marginTop: 5, marginBottom: 5, color: "gray", textAlign: 'center',}}> Get Directions</Text>
                                 </Button>
                             </FooterTab>
                         </Footer>
@@ -224,6 +225,19 @@ export class Map extends React.Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+
+    button: {
+        textAlign: 'center',
+        paddingLeft: 8,
+        width: 100,
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+    }
+
+});
 
 Map.propTypes = {
     pins: PropTypes.array,
