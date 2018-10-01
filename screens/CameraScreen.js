@@ -18,7 +18,6 @@ export default class CameraTab extends Component {
         this.setState({ hasCameraPermission: status === 'granted' });
     }
 
-
     renderCreatePinForm = () => {
         const { navigate } = this.props.navigation;
         if(this.state.modalVisible){

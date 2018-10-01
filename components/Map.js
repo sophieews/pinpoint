@@ -180,8 +180,8 @@ export class Map extends React.Component {
                 {this.state.showDirections &&
                 <MapViewDirections
                     origin={{
-                        latitude: this.props.phoneLocation.coords.latitude,
-                        longitude: this.props.phoneLocation.coords.longitude,
+                        latitude: this.props.userLocation.coords.latitude,
+                        longitude: this.props.userLocation.coords.longitude,
                     }}
                     destination={{
                         latitude: this.state.selectedPin.latitude,
