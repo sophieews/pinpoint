@@ -142,10 +142,10 @@ export default class PinModalContent extends React.Component {
                                 {!this.state.editPin &&
                                 <View style={{flex: 1}}>
                                     <Row>
-                                        <Text style={{fontSize: 30, fontWeight: "500", color:"#4D5656"}}>{this.props.pin.title}</Text>
+                                        <Text style={{fontSize: 30, fontWeight: "500", color:"#4D5656"}}>{this.state.pinTitle}</Text>
                                     </Row>
                                     <Row>
-                                        <Text style={{fontSize: 20, color:"#283747"}}>{this.props.pin.description}</Text>
+                                        <Text style={{fontSize: 20, color:"#283747"}}>{this.state.pinDescription}</Text>
                                     </Row>
                                     <Row>
                                         <Button title="Edit" style={styles.button} onPress={() => {
