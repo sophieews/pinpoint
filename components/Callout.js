@@ -1,7 +1,5 @@
 import {Text, View} from "react-native";
-import {Col, Grid, Row} from "react-native-easy-grid";
-import {CalloutImage} from "./CalloutImage";
-import {MapView} from "expo";
+import {Grid, Row} from "react-native-easy-grid";
 import React from "react";
 
 
