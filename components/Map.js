@@ -6,12 +6,15 @@ import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
 import {Col, Grid, Row} from "react-native-easy-grid";
 import {Button, Container, Header, Right} from "native-base";
+import {Container, Header, Right, Button, Footer, FooterTab} from "native-base";
 import PinModalContent from "./PinModalContent";
 import Circle from './Circle'
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import IconRemove from "react-native-vector-icons/Entypo";
 import * as firebase from "firebase";
-import {CalloutImage} from "./CalloutImage";
 import CalloutContents from "./Callout";
+import MapViewDirections from "react-native-maps-directions"
+const GOOGLE_MAPS_APIKEY = 'AIzaSyCKd5L9TEid938ketDq2L8q8I3gz0sMmTg';
 
 export class Map extends React.Component {
     static navigationOptions = {
@@ -20,16 +23,17 @@ export class Map extends React.Component {
     };
 
     state = {
-            modalVisible: false,
-            selectedPin: {},
-            selectedImage: "",
-            radiusActive: false,
-            region : {
-                latitude: 0,
-                longitude: 0,
-                latitudeDelta: 0,
-                longitudeDelta: 0
-            }
+        modalVisible: false,
+        selectedPin: {},
+        selectedImage: "",
+        radiusActive: false,
+        showDirections: false,
+        region : {
+            latitude: 0,
+            longitude: 0,
+            latitudeDelta: 0,
+            longitudeDelta: 0
+        }
     };
 
     componentWillMount() {
@@ -48,22 +52,12 @@ export class Map extends React.Component {
 
     async setSelectedPin(pin) {
         await this.setState({selectedPin: pin});
-        // const url = await this.getSelectedImage(pin);
-        // this.setState({selectedImage: url});
     }
 
-    async getSelectedImage(pin) {
-        let imageRef = firebase.storage().ref("images/" + pin.photo);
-        await imageRef.getDownloadURL()
-            .then((url) => {
-                return url
-            })
-            .catch((error) => {
-                console.log(error)
-                // Handle any errors
-            })
-
+    setDirections(bool) {
+        this.setState({showDirections: bool})
     }
+
 
     async toggleRadiusActive(active) {
         this.setState({radiusActive: active});
@@ -126,13 +120,23 @@ export class Map extends React.Component {
                         <Header style={{backgroundColor: '#ffffff'}}>
                             <Right>
                                 <Text onPress={() => {
-                                    this.setModalVisible(!this.state.modalVisible);
+                                    this.setModalVisible(false)
                                 }}>
                                     Back
                                 </Text>
                             </Right>
                         </Header>
-                        <PinModalContent pin={this.state.selectedPin}/>
+                        <PinModalContent pin={this.state.selectedPin} />
+                        <Footer>
+                            <FooterTab>
+                                <Button onPress={() => {
+                                    this.setDirections(true);
+                                    this.setModalVisible(!this.state.modalVisible);
+                                }}>
+                                    <Icon size={35} name='directions' color="gray"/>
+                                </Button>
+                            </FooterTab>
+                        </Footer>
                     </Container>
                 </Modal>
 
@@ -173,6 +177,20 @@ export class Map extends React.Component {
                 {this.state.radiusActive ?
                     <Circle coords={this.props.userLocation.coords}/>
                     : <View/>}
+                {this.state.showDirections &&
+                <MapViewDirections
+                    origin={{
+                        latitude: this.props.phoneLocation.coords.latitude,
+                        longitude: this.props.phoneLocation.coords.longitude,
+                    }}
+                    destination={{
+                        latitude: this.state.selectedPin.latitude,
+                        longitude: this.state.selectedPin.longitude
+                    }}
+                    strokeWidth={3}
+                    strokeColor="#D82828"
+                    apikey={GOOGLE_MAPS_APIKEY}/>
+                }
             </MapView>
             <View style={{
                 position: 'absolute',
@@ -187,6 +205,22 @@ export class Map extends React.Component {
                     <Icon name="map-marker-radius" style={this.state.radiusActive ? mapStyles.activeRadiusButton : mapStyles.inactiveRadiusButton} size={35}/>
                 </Button>
             </View>
+                {this.state.showDirections &&
+                <View style={{
+                    position: 'absolute',
+                    right: 20,
+                    top: 20,
+                    backgroundColor: 'transparent',
+                }}>
+                    <Button onPress={() => {this.setDirections(false)}} style={{
+                        borderRadius: 40, backgroundColor: "transparent", height: 55, shadowColor: '#424242',
+                        shadowOffset: {width: 1, height: 1},
+                        shadowOpacity: 0.5
+                    }}>
+                        <IconRemove name="cross" size={45}/>
+                    </Button>
+                </View>
+                }
             </Container>
         )
     }

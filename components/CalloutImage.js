@@ -25,7 +25,6 @@ export class CalloutImage extends React.Component {
             })
             .catch((error) => {
                 console.log(error)
-                // Handle any errors
         })
     }
     render() {

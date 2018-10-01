@@ -63,6 +63,7 @@ export default class HomeScreen extends React.Component {
     }
 
     render() {
+        const { navigate } = this.props.navigation;
         let text = 'Waiting..';
         if (this.state.errorMessage) {
             text = this.state.errorMessage;
@@ -85,7 +86,7 @@ export default class HomeScreen extends React.Component {
                 )
             } else {
                 return(
-                    <Map pins={this.state.pins} userLocation={this.state.userLocation}/>
+                    <Map pins={this.state.pins} userLocation={this.state.userLocation} navigate={navigate}/>
                 )
             }
         }
