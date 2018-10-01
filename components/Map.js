@@ -4,7 +4,7 @@ import {Modal, Image, Text, TouchableHighlight, View, Alert} from 'react-native'
 import PropTypes from 'prop-types';
 import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
-import {Container, Header, Right, Button, Footer} from "native-base";
+import {Container, Header, Right, Button, Footer, FooterTab} from "native-base";
 import PinModalContent from "./PinModalContent";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IconRemove from "react-native-vector-icons/Entypo";
@@ -33,26 +33,12 @@ export class Map extends React.Component {
 
     async setSelectedPin(pin) {
         await this.setState({selectedPin: pin});
-        // const url = await this.getSelectedImage(pin);
-        // this.setState({selectedImage: url});
-    }
-
-    async getSelectedImage(pin) {
-        let imageRef = firebase.storage().ref("images/" + pin.photo);
-        await imageRef.getDownloadURL()
-            .then((url) => {
-                return url
-            })
-            .catch((error) => {
-                console.log(error)
-                // Handle any errors
-            })
-
     }
 
     setDirections(bool) {
         this.setState({showDirections: bool})
     }
+
 
     render() {
         return (
@@ -69,20 +55,22 @@ export class Map extends React.Component {
                         <Header style={{backgroundColor: '#ffffff'}}>
                             <Right>
                                 <Text onPress={() => {
-                                    this.setModalVisible(!this.state.modalVisible);
+                                    this.setModalVisible(false)
                                 }}>
                                     Back
                                 </Text>
                             </Right>
                         </Header>
-                        <PinModalContent pin={this.state.selectedPin}/>
+                        <PinModalContent pin={this.state.selectedPin} />
                         <Footer>
-                            <Text style={{marginTop: 10, fontSize: 20}} onPress={() => {
-                                this.setDirections(true);
-                                this.setModalVisible(!this.state.modalVisible);
-                            }}>
-                                Get Directions
-                            </Text>
+                            <FooterTab>
+                                <Button onPress={() => {
+                                    this.setDirections(true);
+                                    this.setModalVisible(!this.state.modalVisible);
+                                }}>
+                                    <Icon size={35} name='directions' color="gray"/>
+                                </Button>
+                            </FooterTab>
                         </Footer>
                     </Container>
                 </Modal>
@@ -90,8 +78,6 @@ export class Map extends React.Component {
                 <MapView
                     style={{flex: 1}}
                     initialRegion={{
-                        // latitude: -43.5322563,
-                        // longitude: 172.559524,
                         latitude: this.props.phoneLocation.coords.latitude,
                         longitude: this.props.phoneLocation.coords.longitude,
                         latitudeDelta: 0.0922,
@@ -154,20 +140,20 @@ export class Map extends React.Component {
                     </Button>
                 </View>
                 {this.state.showDirections &&
-                    <View style={{
-                        position: 'absolute',
-                        right: 20,
-                        top: 20,
-                        backgroundColor: 'transparent',
+                <View style={{
+                    position: 'absolute',
+                    right: 20,
+                    top: 20,
+                    backgroundColor: 'transparent',
+                }}>
+                    <Button onPress={() => {this.setDirections(false)}} style={{
+                        borderRadius: 40, backgroundColor: "transparent", height: 55, shadowColor: '#424242',
+                        shadowOffset: {width: 1, height: 1},
+                        shadowOpacity: 0.5
                     }}>
-                        <Button onPress={() => {this.setDirections(false)}} style={{
-                            borderRadius: 40, backgroundColor: "transparent", height: 55, shadowColor: '#424242',
-                            shadowOffset: {width: 1, height: 1},
-                            shadowOpacity: 0.5
-                        }}>
-                            <IconRemove name="cross" size={45}/>
-                        </Button>
-                    </View>
+                        <IconRemove name="cross" size={45}/>
+                    </Button>
+                </View>
                 }
             </Container>
         )

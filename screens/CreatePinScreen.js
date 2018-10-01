@@ -72,12 +72,14 @@ export default class CreatePinScreen extends Component {
 
         let location = await this.getLocationAsync();
 
-        await firebase.database().ref('pins/').push().set({
+        let key = Math.random().toString(36).substr(2, 16);
+        await firebase.database().ref('pins/').child(key).set({
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
             title: this.state.pinTitle,
             description: this.state.pinDescription,
             photo: this.state.imageName,
+            id: key
         })
 
         await this.setState({
