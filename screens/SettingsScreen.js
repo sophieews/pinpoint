@@ -103,9 +103,9 @@ export default class SettingsScreen extends React.Component {
                         <Text>Pin Radius</Text>
                         </Body>
                         <Right>
-                            {/*<Text onPress={() => {this.setModalVisible(true)}}>{this.state.radius} km</Text>*/}
-                            <Text onPress={() => alert("Exciting stuff happening here! This feature will be up and running very soon...")}>- km</Text>
-                            <Icon active name="arrow-forward" onPress={() => alert("Exciting stuff happening here! This feature will be up and running very soon...")}/>
+                            <Text onPress={() => {this.setModalVisible(true)}}>{this.state.radius} km</Text>
+                            {/*<Text onPress={() => alert("Exciting stuff happening here! This feature will be up and running very soon...")}>- km</Text>*/}
+                            <Icon active name="arrow-forward" onPress={() => {this.setModalVisible(true)}}/>
                         </Right>
                     </ListItem>
                 </Content>
