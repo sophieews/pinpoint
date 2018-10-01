@@ -57,9 +57,12 @@ export class Map extends React.Component {
 
 
     async toggleRadiusActive(active) {
-        this.setState({radiusActive: active});
-        if(active) {
-            await this.setRegion();
+        const radius = await this.getRadius();
+        if(radius) {
+            this.setState({radiusActive: active});
+            if(active) {
+                this.setRegion(radius)
+            }
         }
     }
 
@@ -77,10 +80,9 @@ export class Map extends React.Component {
         return storageItem;
     };
 
-    async setRegion() {
+    async setRegion(radius) {
         const lat = this.props.userLocation.coords.latitude;
         const long = this.props.userLocation.coords.longitude;
-        const radius = await this.getRadius();
         // number of km per degree = ~111km (111.32 in google maps, but range varies between 110.567km at the equator and 111.699km at the poles)
         // 1km in degree = 1 / 111.32km = 0.0089
         // 1m in degree = 0.0089 / 1000 = 0.0000089

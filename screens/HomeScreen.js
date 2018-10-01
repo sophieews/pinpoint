@@ -72,7 +72,6 @@ export default class HomeScreen extends React.Component {
                 }
 
             }
-            console.log(pins);
             this.setState({
                 pins: pins
             })
