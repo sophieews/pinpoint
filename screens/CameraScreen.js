@@ -8,6 +8,7 @@ import CreatePinScreen from "./CreatePinScreen";
 export default class CameraTab extends Component {
     state = {
         hasCameraPermission: null,
+        hasCameraRollPermission: null,
         modalVisible: true,
         type: Camera.Constants.Type.back,
         image: {}
@@ -15,7 +16,11 @@ export default class CameraTab extends Component {
 
     async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({ hasCameraPermission: status === 'granted' });
+        const { statusRoll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        this.setState({
+            hasCameraPermission: status === 'granted',
+            hasCameraRollPermission: statusRoll === 'granted'
+        });
     }
 
     renderCreatePinForm = () => {

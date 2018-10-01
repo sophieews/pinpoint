@@ -26,7 +26,11 @@ export default class PinModalContent extends React.Component {
     async componentDidMount() {
         await this.getSelectedImage(this.props.pin);
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({ hasCameraPermission: status === 'granted' });
+        const { statusRoll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        this.setState({
+            hasCameraPermission: status === 'granted',
+            hasCameraRollPermission: statusRoll === 'granted'
+        });
     }
 
     async updateImage() {

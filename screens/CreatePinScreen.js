@@ -14,6 +14,7 @@ export default class CreatePinScreen extends Component {
         pinTitle: "",
         pinDescription: "",
         hasCameraPermission: null,
+        hasCameraRollPermission: null,
         modalVisible: false,
         type: Camera.Constants.Type.back,
         image: null,
@@ -24,7 +25,11 @@ export default class CreatePinScreen extends Component {
 
     async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({ hasCameraPermission: status === 'granted' });
+        const { statusRoll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        this.setState({
+            hasCameraPermission: status === 'granted',
+            hasCameraRollPermission: statusRoll === 'granted'
+        });
     }
 
     chooseImage = async () => {
