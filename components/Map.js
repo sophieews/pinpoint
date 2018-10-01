@@ -1,5 +1,5 @@
 import React from "react";
-import {AsyncStorage, Image, Modal, Text, View} from 'react-native';
+import {AsyncStorage, Image, Modal, Text, View, Platform, Dimensions} from 'react-native';
 import MapView from "react-native-map-clustering";
 import {Callout, Marker} from "react-native-maps";
 import PropTypes from 'prop-types';
@@ -9,7 +9,7 @@ import {Col, Grid, Row} from "react-native-easy-grid";
 import {Button, Container, Header, Right} from "native-base";
 import PinModalContent from "./PinModalContent";
 import Circle from './Circle'
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import * as firebase from "firebase";
 import {CalloutImage} from "./CalloutImage";
 import CalloutContents from "./Callout";
@@ -21,25 +21,23 @@ export class Map extends React.Component {
     };
 
     state = {
-            modalVisible: false,
-            selectedPin: {},
-            selectedImage: "",
-            radiusActive: false,
-            region : {
-                latitude: 0,
-                longitude: 0,
-                latitudeDelta: 0,
-                longitudeDelta: 0
-            }
+        modalVisible: false,
+        selectedPin: {},
+        selectedImage: "",
+        radiusActive: false,
+        region : {
+            latitude: 0,
+            longitude: 0,
+            latitudeDelta: 0,
+            longitudeDelta: 0
+        },
+        flex: 0
     };
 
     componentWillMount() {
-        this.setState({ region: {
-            latitude: this.props.userLocation.coords.latitude,
-            longitude: this.props.userLocation.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,}
-        })
+        //Hack to ensure the showsMyLocationButton is shown initially. Idea is to force a repaint
+        setTimeout(()=>this.setState({flex: 1}), 500);
+        // setTimeout(()=>this.forceUpdate() (), 500);
     }
 
 
@@ -136,10 +134,15 @@ export class Map extends React.Component {
                         <PinModalContent pin={this.state.selectedPin}/>
                     </Container>
                 </Modal>
-
+        {/*<View style={{paddingTop: this.state.statusBarHeight }}>*/}
             <MapView
-                style={{flex: 1}}
-                region={this.state.region}
+                style={{flex: this.state.flex, width: Dimensions.get('window').width, height: Dimensions.get('window').height}}
+                region={{
+                    latitude: this.props.userLocation.coords.latitude,
+                    longitude: this.props.userLocation.coords.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421
+                }}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
                 provider={"google"}
@@ -170,19 +173,7 @@ export class Map extends React.Component {
                     </Marker>
                 ))}
             </MapView>
-            <View style={{
-                position: 'absolute',
-                right: 10,
-                bottom: 75,
-                backgroundColor: 'transparent',
-            }}>
-                {/*<Button style={{borderRadius: 40, backgroundColor: "#fff", height: 55, shadowColor: '#424242',*/}
-                    {/*shadowOffset: { width: 1, height: 1 },*/}
-                    {/*shadowOpacity: 0.5,}}*/}
-                                 {/*onPress={() =>this.toggleRadiusActive(!this.state.radiusActive)}>*/}
-                    {/*<Icon name="map-marker-radius" style={this.state.radiusActive ? mapStyles.activeRadiusButton : mapStyles.inactiveRadiusButton} size={35}/>*/}
-                {/*</Button>*/}
-            </View>
+        {/*</View>*/}
             </Container>
         )
     }

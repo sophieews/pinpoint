@@ -8,5 +8,8 @@ export const mapStyles = StyleSheet.create({
     inactiveRadiusButton: {
         paddingHorizontal: 10,
         color: "#424242"
+    },
+    locationButton : {
+        color: "#3d5497",
     }
 });
