@@ -1,6 +1,6 @@
 import {MapView} from "expo";
 import React from "react";
-import {AsyncStorage, Image, Modal, Text, View} from 'react-native';
+import {AsyncStorage, Image, Modal, Text, View, Platform} from 'react-native';
 import PropTypes from 'prop-types';
 import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
@@ -154,10 +154,12 @@ export class Map extends React.Component {
                         title={pin.title}
                         description={pin.description}
                     >
-                        <Image
-                            source={require("../assets/images/pin.png")}
-                            style={{height: 35, width: 30}}
-                        />
+                        {Platform.OS === 'android' ? undefined :
+                            <Image
+                                source={require("../assets/images/pin.png")}
+                                style={{height: 35, width: 30}}
+                            />
+                        }
                         <MapView.Callout style={{flex: -1, position: 'absolute', minWidth:150, minHeight: 60}}
                                          onPress={() => {
                                              this.setModalVisible(true);
@@ -170,7 +172,7 @@ export class Map extends React.Component {
                 ))}
                 {this.state.radiusActive ?
                     <Circle coords={this.props.userLocation.coords}/>
-                    : null}
+                    : <View/>}
             </MapView>
             <View style={{
                 position: 'absolute',

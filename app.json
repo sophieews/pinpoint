@@ -28,7 +28,11 @@
       "bundleIdentifier": "com.pinpoint.app"
     },
     "android": {
-      "package": "com.pinpoint.app"
+      "package": "com.pinpoint.app",
+      "permissions": [
+        "CAMERA",
+        "CAMERA_ROLL"
+      ]
     }
   }
 }

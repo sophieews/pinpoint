@@ -18,7 +18,6 @@ export default class PinModalContent extends React.Component {
         await this.getSelectedImage(this.props.pin)
     }
 
-
     async getSelectedImage(pin) {
         let imageRef = firebase.storage().ref("images/" + pin.photo);
         await imageRef.getDownloadURL()
