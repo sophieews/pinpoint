@@ -1,9 +1,9 @@
-import {MapView} from "expo";
+import {Circle} from "react-native-maps";
 import {AsyncStorage} from "react-native";
 import React from 'react';
 
 
-export default class Circle extends React.Component {
+export default class RadiusCircle extends React.Component {
 
     constructor(props) {
         super(props);
@@ -35,7 +35,7 @@ export default class Circle extends React.Component {
 
     render() {
         return(
-            <MapView.Circle
+            <Circle
                 center={{latitude: this.props.coords.latitude, longitude: this.props.coords.longitude}}
                 radius={this.state.radius}
                 fillColor="rgba(0, 204, 153, 0.1)"
