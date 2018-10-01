@@ -9,7 +9,16 @@ export const mapStyles = StyleSheet.create({
         paddingHorizontal: 10,
         color: "#424242"
     },
-    locationButton : {
-        color: "#3d5497",
+    radiusButtonViewIOS: {
+        position: 'absolute',
+        right: 10,
+        bottom: 75,
+        backgroundColor: 'transparent',
+    },
+    radiusButtonViewAndroid: {
+        position: 'absolute',
+        right: 10,
+        bottom: 5,
+        backgroundColor: 'transparent',
     }
 });

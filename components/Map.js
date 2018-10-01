@@ -1,15 +1,14 @@
 import React from "react";
-import {AsyncStorage, Image, Modal, Text, View, Platform, StyleSheet} from 'react-native';
-import {AsyncStorage, Image, Modal, Text, View, Platform, Dimensions} from 'react-native';
-import MapView from "react-native-map-clustering";
-import {Callout, Marker} from "react-native-maps";
+import {AsyncStorage, Image, Modal, Text, View, Platform, StyleSheet, Dimensions} from 'react-native';
+// import MapView from "react-native-map-clustering";
+import MapView from "react-native-maps";
 import PropTypes from 'prop-types';
 import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
 import {Button, Container, Header, Right, Footer, FooterTab} from "native-base";
 import PinModalContent from "./PinModalContent";
 import Circle from './Circle'
-import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IconRemove from "react-native-vector-icons/Entypo";
 import CalloutContents from "./Callout";
 import MapViewDirections from "react-native-maps-directions"
@@ -28,10 +27,10 @@ export class Map extends React.Component {
         radiusActive: false,
         showDirections: false,
         region : {
-            latitude: 0,
-            longitude: 0,
-            latitudeDelta: 0,
-            longitudeDelta: 0
+            latitude: this.props.userLocation.coords.latitude,
+            longitude: this.props.userLocation.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
         },
         flex: 0
     };
@@ -139,22 +138,16 @@ export class Map extends React.Component {
                         </Footer>
                     </Container>
                 </Modal>
-        {/*<View style={{paddingTop: this.state.statusBarHeight }}>*/}
             <MapView
                 style={{flex: this.state.flex, width: Dimensions.get('window').width, height: Dimensions.get('window').height}}
-                region={{
-                    latitude: this.props.userLocation.coords.latitude,
-                    longitude: this.props.userLocation.coords.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421
-                }}
+                region={this.state.region}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
                 provider={"google"}
                 customMapStyle={customMap}
             >
                 {this.props.pins.map((pin, index) => (
-                    <Marker
+                    <MapView.Marker
                         key={index}
                         coordinate={{
                             latitude: pin.latitude,
@@ -169,19 +162,20 @@ export class Map extends React.Component {
                                 style={{height: 35, width: 30}}
                             />
                         }
-                        <Callout style={{flex: -1, position: 'absolute', minWidth:150, minHeight: 60}}
+                        <MapView.Callout style={{flex: -1, position: 'absolute', minWidth:150, minHeight: 60}}
                                          onPress={() => {
                                              this.setModalVisible(true);
                                              this.setSelectedPin(pin);
                                          }}
                         >
                             <CalloutContents pin={pin}/>
-                        </Callout>
-                    </Marker>
+                        </MapView.Callout>
+                    </MapView.Marker>
                 ))}
                 {this.state.radiusActive ?
                     <Circle coords={this.props.userLocation.coords}/>
-                    : <View/>}
+                    : <View/>
+                }
                 {this.state.showDirections &&
                 <MapViewDirections
                     origin={{
@@ -197,12 +191,7 @@ export class Map extends React.Component {
                     apikey={GOOGLE_MAPS_APIKEY}/>
                 }
             </MapView>
-            <View style={{
-                position: 'absolute',
-                right: 10,
-                bottom: 75,
-                backgroundColor: 'transparent',
-            }}>
+            <View style={Platform.OS === 'android' ? mapStyles.radiusButtonViewAndroid : mapStyles.radiusButtonViewIOS}>
                 <Button style={{borderRadius: 40, backgroundColor: "#fff", height: 55, shadowColor: '#424242',
                     shadowOffset: { width: 1, height: 1 },
                     shadowOpacity: 0.5,}}
@@ -217,16 +206,8 @@ export class Map extends React.Component {
                     top: 20,
                     backgroundColor: 'transparent',
                 }}>
-                    <Button onPress={() => {this.setDirections(false)}} style={{
-                        borderRadius: 40, backgroundColor: "transparent", height: 55, shadowColor: '#424242',
-                        shadowOffset: {width: 1, height: 1},
-                        shadowOpacity: 0.5
-                    }}>
-                        <IconRemove name="cross" size={45}/>
-                    </Button>
                 </View>
                 }
-        {/*</View>*/}
             </Container>
         )
     }
