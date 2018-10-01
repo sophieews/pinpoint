@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
 import {Col, Grid, Row} from "react-native-easy-grid";
-import {Button, Container, Header, Right} from "native-base";
-import {Container, Header, Right, Button, Footer, FooterTab} from "native-base";
+import {Button, Container, Header, Right, Footer, FooterTab} from "native-base";
 import PinModalContent from "./PinModalContent";
 import Circle from './Circle'
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
