@@ -13,7 +13,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 export default class HomeScreen extends React.Component {
 
     static navigationOptions = {
-        title: 'Home',
         header: null,
     };
 
@@ -30,8 +29,8 @@ export default class HomeScreen extends React.Component {
 
     async componentDidMount() {
         await this.getLocationAsync();
-        const pins = await this.fetchPins();
-        this.setState({pins: pins, isLoading: false});
+        await this.listenForPins();
+        this.setState({isLoading: false});
     }
 
     async getLocationAsync() {
@@ -60,6 +59,24 @@ export default class HomeScreen extends React.Component {
         const snapshot = await eventref.once('value');
         const value = Object.values(snapshot.val());
         return value;
+    }
+
+    async listenForPins() {
+        const pinsref = firebase.database().ref('pins/');
+        pinsref.on('value', (snapshot) => {
+            const pins = [];
+            const obj = snapshot.val();
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    pins.push(obj[key]);
+                }
+
+            }
+            console.log(pins);
+            this.setState({
+                pins: pins
+            })
+        });
     }
 
     render() {
