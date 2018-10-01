@@ -202,10 +202,17 @@ export class Map extends React.Component {
                 {this.state.showDirections &&
                 <View style={{
                     position: 'absolute',
-                    right: 20,
+                    left: 20,
                     top: 20,
                     backgroundColor: 'transparent',
                 }}>
+                    <Button onPress={() => {this.setDirections(false)}} style={{
+                        borderRadius: 40, backgroundColor: "transparent", height: 55, shadowColor: '#424242',
+                        shadowOffset: {width: 1, height: 1},
+                        shadowOpacity: 0.5
+                    }}>
+                        <IconRemove name="cross" size={45}/>
+                    </Button>
                 </View>
                 }
             </Container>
