@@ -29,6 +29,7 @@ export default class CreatePinScreen extends Component {
 
     chooseImage = async () => {
         let result = await ImagePicker.launchCameraAsync();
+        // let result = await ImagePicker.launchImageLibraryAsync();
 
         if(!result.cancelled){
             this.uploadImage(result.uri)
@@ -142,8 +143,8 @@ export default class CreatePinScreen extends Component {
                         <FormInput value={this.state.pinTitle} onChangeText={(pinTitle) => this.setState({pinTitle})}/>
                         <FormLabel>Description</FormLabel>
                         <FormInput value={this.state.pinDescription} onChangeText={(pinDescription) => this.setState({pinDescription})}/>
-                        <Button title="Submit Pin" style={styles.button} onPress={() => {
-                            this.submitPin();
+                        <Button title="Submit Pin" style={styles.button} onPress={async () => {
+                            await this.submitPin();
                             this.props.navigate('Home')
                         }}/>
                     </View>
