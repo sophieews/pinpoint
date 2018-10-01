@@ -4,13 +4,11 @@ import {AsyncStorage, Image, Modal, Text, View, Platform} from 'react-native';
 import PropTypes from 'prop-types';
 import {mapStyles} from "./Map.style";
 import {customMap} from "./CustomMap";
-import {Col, Grid, Row} from "react-native-easy-grid";
 import {Button, Container, Header, Right, Footer, FooterTab} from "native-base";
 import PinModalContent from "./PinModalContent";
 import Circle from './Circle'
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IconRemove from "react-native-vector-icons/Entypo";
-import * as firebase from "firebase";
 import CalloutContents from "./Callout";
 import MapViewDirections from "react-native-maps-directions"
 const GOOGLE_MAPS_APIKEY = 'AIzaSyCKd5L9TEid938ketDq2L8q8I3gz0sMmTg';
